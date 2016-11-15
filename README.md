@@ -5,5 +5,5 @@ PTA - Winter 2016/17 project
 A. Haroon Khaleeq  
 B. Pranay Sarkar  
 
-*Supervisor*  
+*Supervisor*:  
 Martin Billies
