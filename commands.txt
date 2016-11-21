@@ -1,0 +1,1 @@
+node src/js/commands/jalangi.js --inlineIID --inlineSource --analysis src/js/analysis_hk1.js tests/test_hk1.js
