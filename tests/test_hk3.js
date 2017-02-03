@@ -15,6 +15,11 @@ function t(a) {
 		r(viu);
 	}
 	s(a);
+
+	function p(){
+		return 3;
+	}
+	p();
 }
 
 f(1);
