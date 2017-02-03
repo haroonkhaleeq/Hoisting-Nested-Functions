@@ -40,13 +40,36 @@ var program_stack = [];
 function get_nested_functions(f, i){
 	var match = false;
 	var result = [];
+	var nested_nested_flag = false;
+	var nnv = '';
+
 	while(match == false){
 		i++;
 		//console.log("starting loop with index: " + i);
 				
-//console.log(program_stack[i].includes('declare_'));
-//console.log(function_list.includes(program_stack[i].split('_').splice(-1)[0]));
+		//console.log(program_stack[i].includes('declare_'));
+		//console.log(function_list.includes(program_stack[i].split('_').splice(-1)[0]));
 
+		if(program_stack[i].includes('invoke-fun-pre')){
+			nnv = program_stack[i].split('_').splice(-1)[0];
+			//console.log('1st');
+			//console.log(nnv);
+			nested_nested_flag = true;
+			continue;
+		}
+		
+		if(program_stack[i] === ('invoke-fun_'+nnv)){
+			nested_nested_flag = false;
+			//console.log('2nd');
+			continue;
+		}
+		
+		if(nested_nested_flag === true){
+			//console.log('3rd');
+			continue;
+		}
+
+		//console.log('4th');
 
 		if(program_stack[i].includes('declare_') && function_list.includes(program_stack[i].split('_').splice(-1)[0])){
 			//console.log(program_stack[i].includes('declare_'));
