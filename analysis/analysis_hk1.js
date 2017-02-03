@@ -22,8 +22,63 @@ var program_stack = [];
             return {result: val};
         };
 
+        /* Variables declared in Parent scope should not be accessed in Child scope */
+
+        /**
+         * This callback is called before a property of an object is written.
+         */
+        this.putFieldPre = function (iid, base, offset, val, isComputed, isOpAssign) {
+        	program_stack.push('put-field-pre_' + offset);
+            return {base: base, offset: offset, val: val, skip: false};
+        };
+
+        /**
+         * This callback is called after a property of an object is written.
+         */
+        this.putField = function (iid, base, offset, val, isComputed, isOpAssign) {
+        	program_stack.push('put-field_' + offset);
+            return {result: val};
+        };
+
+        /**
+         * This callback is called before a property of an object is accessed.
+         */
+        this.getFieldPre = function (iid, base, offset, isComputed, isOpAssign, isMethodCall) {
+        	program_stack.push('get-field-pre_' + offset);
+            return {base: base, offset: offset, skip: false};
+        };
+
+        /**
+         * This callback is called after a property of an object is accessed.
+         */
+        this.getField = function (iid, base, offset, val, isComputed, isOpAssign, isMethodCall) {
+        	program_stack.push('get-field_' + offset);
+            return {result: val};
+        };
+
+        /**
+         * This callback is called after a variable is read.
+         */
+        this.read = function (iid, name, val, isGlobal, isScriptLocal) {
+			program_stack.push('read_var_' + name);
+            return {result: val};
+        };
+
+        /**
+         * This callback is called before a variable is written.
+         */
+        this.write = function (iid, name, val, lhs, isGlobal, isScriptLocal) {
+        	program_stack.push('write_var_' + name);
+            return {result: val};
+        };
+
+        
+
+
         this.scriptExit = function (iid, wrappedExceptionVal) {
+        	console.log("Function List: ");
             console.log(function_list);
+            console.log("Program Stack: ");
 			console.log(program_stack);
 			check_program_trace();
 			return {wrappedExceptionVal: wrappedExceptionVal, isBacktrack: false};
@@ -44,8 +99,8 @@ function get_nested_functions(f, i){
 		i++;
 		//console.log("starting loop with index: " + i);
 				
-//console.log(program_stack[i].includes('declare_'));
-//console.log(function_list.includes(program_stack[i].split('_').splice(-1)[0]));
+		//console.log(program_stack[i].includes('declare_'));
+		//console.log(function_list.includes(program_stack[i].split('_').splice(-1)[0]));
 
 
 		if(program_stack[i].includes('declare_') && function_list.includes(program_stack[i].split('_').splice(-1)[0])){
