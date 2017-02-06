@@ -7,6 +7,9 @@ function f(a) {
 	g(a);
 }
 
+function g(){}
+g();
+
 function t(a) {
 	function s(viu) {
 		function r(ert) {

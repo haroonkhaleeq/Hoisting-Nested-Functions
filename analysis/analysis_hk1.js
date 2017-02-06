@@ -18,7 +18,7 @@ var program_stack = [];
 
 		this.declare = function (iid, name, val, isArgument, argumentIndex, isCatchParam) {
 			program_stack.push('declare_' + name);
-			//console.log(iid + ' : ' + name);
+			console.log(iid + ' : ' + name);
             return {result: val};
         };
 
@@ -81,7 +81,7 @@ var program_stack = [];
             console.log("Program Stack: ");
 			console.log(program_stack);
 			check_program_trace_for_nested_functions();
-			//check_program_trace_for_dependencies();
+			check_program_trace_for_dependencies();
 			return {wrappedExceptionVal: wrappedExceptionVal, isBacktrack: false};
         };
 
