@@ -81,7 +81,7 @@ var program_stack = [];
             console.log("Program Stack: ");
 			console.log(program_stack);
 			check_program_trace_for_nested_functions();
-			check_program_trace_for_dependencies();
+			//check_program_trace_for_dependencies();
 			return {wrappedExceptionVal: wrappedExceptionVal, isBacktrack: false};
         };
 
@@ -238,7 +238,7 @@ function check_program_trace_for_dependencies(){
 			console.log(f + ' has these nested functions: ' + f_nested_functions);
 			
 			//List of variables written by Parent Function
-			/*var f_written_variables = get_var_write_list(f);
+			var f_written_variables = get_var_write_list(f);
 			console.log(f + ' writes to: ' + f_written_variables);
 
 			//List of variables read by child functions
@@ -270,7 +270,7 @@ function check_program_trace_for_dependencies(){
 						console.log('Function'+ f_nested_functions[j] +' is not a hoisted function.');
 					}
 				}
-			}*/
+			}
 		}
 	}
 
