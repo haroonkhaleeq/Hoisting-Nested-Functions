@@ -176,6 +176,8 @@ function get_var_write_list(f){
 
 /**
 * Gets a list of variables that is read from, in the function scope
+* @param f - Function whose scope is being considered - Child functions scope ignored
+* @returns var_read_list - Array of all variables read in the function scope
 */
 function get_var_read_list(f){
 	var var_read_list = [];
@@ -199,6 +201,7 @@ function get_var_read_list(f){
 }
 
 /**
+* Checks if the variable is from the parent function scope or not
 * @param f - Function where the variable belongs to
 * @param parent_f - Parent function of the testing function
 * @param v - Variable to be tested
@@ -207,6 +210,7 @@ function get_var_read_list(f){
 function is_var_from_parent(nestedF_read_var_list, f_written_variables){
 	var result = false;
 	for (i=0; i<nestedF_read_var_list.length; i++){
+		//Check if the read variable is already there in written variables list
 		if(f_written_variables.indexOf(nestedF_read_var_list[i] > -1)){
 			//Variable is from parent scope - Function not hoisted..
 			result = true;
@@ -215,6 +219,10 @@ function is_var_from_parent(nestedF_read_var_list, f_written_variables){
 	return result;
 }
 
+/**
+* Checks program trace for nested functions for all included functions
+* @returns - 
+*/
 function check_program_trace_for_nested_functions(){
 	for(i=0; i<program_stack.length; i++){
 		if(program_stack[i].includes('invoke-fun-pre')){
@@ -228,6 +236,9 @@ function check_program_trace_for_nested_functions(){
 
 }
 
+/**
+* 
+*/
 function check_program_trace_for_dependencies(){
 	for(i=0; i<program_stack.length; i++){
 		if(program_stack[i].includes('invoke-fun-pre')){
@@ -259,17 +270,6 @@ function check_program_trace_for_dependencies(){
 					hoisted_functions.push(f_nested_functions[j]);
 				}
 				console.log(f + 'has hoisted functions:' + hoisted_functions);
-
-
-
-
-				for (k=0; k<nestedF_read_var_list.length; k++){
-					if(f_written_variables.indexOf(nestedF_read_var_list[k] > -1)){
-						//Variable is from parent scope.. Not hoisted..
-						console.log('Variable '+ nestedF_read_var_list[k] +' is coming from parent scope..');
-						console.log('Function'+ f_nested_functions[j] +' is not a hoisted function.');
-					}
-				}
 			}
 		}
 	}
