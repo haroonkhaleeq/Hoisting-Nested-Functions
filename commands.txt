@@ -1,1 +1,3 @@
 node src/js/commands/jalangi.js --inlineIID --inlineSource --analysis src/js/analysis_hk1.js tests/test_hk1.js
+
+node src/js/commands/jalangi.js --inlineIID --inlineSource --analysis /home/shooter25/Documents/Haroon/Masters\ DSS/4th\ Semester/Program\ Testing\ and\ Analysis/Project/Hoisting-Nested-Functions/analysis/analysis_hk1.js /home/shooter25/Documents/Haroon/Masters\ DSS/4th\ Semester/Program\ Testing\ and\ Analysis/Project/Hoisting-Nested-Functions/tests/test_hk3.js
