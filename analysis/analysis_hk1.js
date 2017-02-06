@@ -80,7 +80,8 @@ var program_stack = [];
             console.log(function_list);
             console.log("Program Stack: ");
 			console.log(program_stack);
-			check_program_trace();
+			check_program_trace_for_nested_functions();
+			check_program_trace_for_dependencies();
 			return {wrappedExceptionVal: wrappedExceptionVal, isBacktrack: false};
         };
 
@@ -123,7 +124,7 @@ function get_nested_functions(f, i){
 			//console.log('3rd');
 			continue;
 		}
-		
+
 		if(program_stack[i].includes('declare_') && function_list.includes(program_stack[i].split('_').splice(-1)[0])){
 			//console.log(program_stack[i].includes('declare_'));
 			//console.log(function_list.includes(program_stack[i].split('_').splice(-1)[0]));
@@ -214,7 +215,20 @@ function is_var_from_parent(nestedF_read_var_list, f_written_variables){
 	return result;
 }
 
-function check_program_trace(){
+function check_program_trace_for_nested_functions(){
+	for(i=0; i<program_stack.length; i++){
+		if(program_stack[i].includes('invoke-fun-pre')){
+			var f = program_stack[i].split('_').splice(-1)[0];
+			var f_nested_functions = get_nested_functions(f, i);
+			var hoisted_functions = [];
+
+			console.log(f + ' has these nested functions: ' + f_nested_functions);
+		}
+	}
+
+}
+
+function check_program_trace_for_dependencies(){
 	for(i=0; i<program_stack.length; i++){
 		if(program_stack[i].includes('invoke-fun-pre')){
 			var f = program_stack[i].split('_').splice(-1)[0];
@@ -224,7 +238,7 @@ function check_program_trace(){
 			console.log(f + ' has these nested functions: ' + f_nested_functions);
 			
 			//List of variables written by Parent Function
-			var f_written_variables = get_var_write_list(f);
+			/*var f_written_variables = get_var_write_list(f);
 			console.log(f + ' writes to: ' + f_written_variables);
 
 			//List of variables read by child functions
@@ -256,7 +270,7 @@ function check_program_trace(){
 						console.log('Function'+ f_nested_functions[j] +' is not a hoisted function.');
 					}
 				}
-			}
+			}*/
 		}
 	}
 
