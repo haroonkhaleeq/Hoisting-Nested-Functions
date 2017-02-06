@@ -60,7 +60,7 @@ var program_stack = [];
          * This callback is called after a variable is read.
          */
         this.read = function (iid, name, val, isGlobal, isScriptLocal) {
-			program_stack.push('read_var_' + name);
+			program_stack.push('read-var_' + name);
             return {result: val};
         };
 
@@ -68,7 +68,7 @@ var program_stack = [];
          * This callback is called before a variable is written.
          */
         this.write = function (iid, name, val, lhs, isGlobal, isScriptLocal) {
-        	program_stack.push('write_var_' + name);
+        	program_stack.push('write-var_' + name);
             return {result: val};
         };
 
@@ -124,12 +124,118 @@ function get_nested_functions(f, i){
 	return result;
 }
 
+/**
+* Gets a list of variables that is being written to, in the function scope
+* 
+* @param f - Function whose scope is being considered - Child functions scope ignored
+* @returns var_write_list - Array of all variables written in the function scope
+*/
+function get_var_write_list(f){
+	var var_write_list = [];
+	
+	//Getting the scope of function in program stack
+	for(i=0; i<program_stack.length; i++){
+		//If any variable is written in the scope, push it in var_write_list array
+		if(program_stack[i].includes('write-var_')){
+			var_write_list.push(program_stack[i].split('_').splice(-1)[0]);
+		}
+		//Ignore all write in nested function scope
+		if(program_stack[i].includes('invoke-fun-pre')){
+			break;
+		}
+		//At then end of function scope, stop checking for variables
+		if(program_stack[i] === 'invoke-fun_'+f){
+			break;
+		}
+	} 
+	return var_write_list;
+
+}
+
+/**
+* Gets a list of variables that is read from, in the function scope
+*/
+function get_var_read_list(f){
+	var var_read_list = [];
+	
+	//Getting the scope of functionin program stack
+	for(i=0; i<program_stack.length; i++){
+		//If any variable is read in the scope, push it in var_read_list array
+		if(program_stack[i].includes('read-var_')){
+			var_read_list.push(program_stack[i].split('_').splice(-1)[0]);
+		}
+		//Ignore all write in nested function scope
+		if(program_stack[i].includes('invoke-fun-pre')){
+			break;
+		}
+		//At then end of function scope, stop checking for variables
+		if(program_stack[i] === 'invoke-fun_'+f){
+			break;
+		}
+	}
+	return var_read_list;
+}
+
+/**
+* @param f - Function where the variable belongs to
+* @param parent_f - Parent function of the testing function
+* @param v - Variable to be tested
+* @returns - True, if the variable is coming from parent scope; False, if the variable is not coming from parent scope.
+*/
+function is_var_from_parent(nestedF_read_var_list, f_written_variables){
+	var result = false;
+	for (i=0; i<nestedF_read_var_list.length; i++){
+		if(f_written_variables.indexOf(nestedF_read_var_list[i] > -1)){
+			//Variable is from parent scope - Function not hoisted..
+			result = true;
+		}
+	}
+	return result;
+}
+
 function check_program_trace(){
 	for(i=0; i<program_stack.length; i++){
 		if(program_stack[i].includes('invoke-fun-pre')){
 			var f = program_stack[i].split('_').splice(-1)[0];
 			var f_nested_functions = get_nested_functions(f, i);
+			var hoisted_functions = [];
+
 			console.log(f + ' has these nested functions: ' + f_nested_functions);
+			
+			//List of variables written by Parent Function
+			var f_written_variables = get_var_write_list(f);
+			console.log(f + ' writes to: ' + f_written_variables);
+
+			//List of variables read by child functions
+			for (j=0; j<f_nested_functions.length; j++){
+				
+				//Array of all read varables in child scope
+				var nestedF_read_var_list = get_var_read_list(f_nested_functions[j]);
+				
+				//Check if the read variable is written in parent scope
+				var result = is_var_from_parent(nestedF_read_var_list, f_written_variables);
+				if (result == true){
+					//Variable is from parent scope.. Not hoisted..
+					console.log('Variable '+ nestedF_read_var_list[k] +' is coming from parent scope..');
+					console.log('Function'+ f_nested_functions[j] +' is not a hoisted function.');
+					
+				}
+				else{
+					hoisted_functions.push(f_nested_functions[j]);
+				}
+				console.log(f + 'has hoisted functions:' + hoisted_functions);
+
+
+
+
+				for (k=0; k<nestedF_read_var_list.length; k++){
+					if(f_written_variables.indexOf(nestedF_read_var_list[k] > -1)){
+						//Variable is from parent scope.. Not hoisted..
+						console.log('Variable '+ nestedF_read_var_list[k] +' is coming from parent scope..');
+						console.log('Function'+ f_nested_functions[j] +' is not a hoisted function.');
+					}
+				}
+			}
 		}
 	}
 
