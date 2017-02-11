@@ -80,8 +80,10 @@ var program_stack = [];
             console.log(function_list);
             console.log("Program Stack: ");
 			console.log(program_stack);
+			
 			check_program_trace_for_nested_functions();
-			check_program_trace_for_dependencies();
+			get_nf_not_globally_declared();
+			//check_program_trace_for_dependencies();
 			return {wrappedExceptionVal: wrappedExceptionVal, isBacktrack: false};
         };
 
@@ -101,48 +103,31 @@ function get_nested_functions(f, i){
 
 	while(match == false){
 		i++;
-		//console.log("starting loop with index: " + i);
-				
-		//console.log(program_stack[i].includes('declare_'));
-		//console.log(function_list.includes(program_stack[i].split('_').splice(-1)[0]));
 
 		if(program_stack[i].includes('invoke-fun-pre')){
 			nnv = program_stack[i].split('_').splice(-1)[0];
-			//console.log('1st');
-			//console.log(nnv);
 			nested_nested_flag = true;
 			continue;
 		}
 		
 		if(program_stack[i] === ('invoke-fun_'+nnv)){
 			nested_nested_flag = false;
-			//console.log('2nd');
 			continue;
 		}
 		
 		if(nested_nested_flag === true){
-			//console.log('3rd');
 			continue;
 		}
 
 		if(program_stack[i].includes('declare_') && function_list.includes(program_stack[i].split('_').splice(-1)[0])){
-			//console.log(program_stack[i].includes('declare_'));
-			//console.log(function_list.includes(program_stack[i].split('_').splice(-1)[0]));
 			result.push(program_stack[i].split('_').splice(-1)[0]);
 		}
 
-	//program_stack[i].includes('invoke_' + f)
-		
-		//console.log(program_stack[i] === 'invoke-fun_'+f);
 		if(program_stack[i] === 'invoke-fun_'+f){
 			match = true;
-			//console.log('match is true in index: ' + i);
 		}
-
-		//if(i == 8){match = true;}
 	}	
 	
-	//console.log(result);
 	return result;
 }
 
@@ -219,6 +204,8 @@ function is_var_from_parent(nestedF_read_var_list, f_written_variables){
 	return result;
 }
 
+
+
 /**
 * Checks program trace for nested functions for all included functions
 * @returns - 
@@ -228,12 +215,87 @@ function check_program_trace_for_nested_functions(){
 		if(program_stack[i].includes('invoke-fun-pre')){
 			var f = program_stack[i].split('_').splice(-1)[0];
 			var f_nested_functions = get_nested_functions(f, i);
-			var hoisted_functions = [];
-
-			console.log(f + ' has these nested functions: ' + f_nested_functions);
+			//console.log(f + ' has these nested functions: ' + f_nested_functions);
 		}
 	}
 
+}
+
+/**
+ Returns all the nested functions of a global function f
+**/
+function get_nf_of_global_fun_f(f){
+	var result = [];
+	var match = false;
+	var nested_flag = false;
+	var i = 0;
+
+	while(true){
+
+		if(program_stack[i].includes('invoke-fun-pre_'+f)){
+			match = true;
+		}
+
+		if(match == true){
+			if(program_stack[i].includes('declare_') && (function_list.indexOf(program_stack[i].split('_').splice(-1)[0]) > -1) ){
+				//console.log(program_stack[i].split('_').splice(-1)[0]);
+				result.push(program_stack[i].split('_').splice(-1)[0]);
+				nested_flag = true;
+			}
+			else{				
+				if(nested_flag == true){					
+					break;
+				}
+			}
+
+		}
+
+		if(program_stack[i].includes('invoke-fun_'+f)){
+			break;
+		}
+
+		i++;
+	}
+	return result;
+}
+
+
+/**
+ Returns all those nested functions which doesn't exist globally with the same function name
+**/
+function get_nf_not_globally_declared(){
+
+	//Getting all the global function
+	var global_fun = [];
+	var i = 0;
+	var result = [];
+
+	while(true){
+
+		if(!program_stack[i].includes('declare_')){
+			break;
+		}
+
+		if(function_list.indexOf(program_stack[i].split('_').splice(-1)[0]) > -1){
+			global_fun.push(program_stack[i].split('_').splice(-1)[0]);
+		}
+
+		i++;
+	}
+
+	for (var j = 0; j < global_fun.length; j++) {
+		var nf = get_nf_of_global_fun_f(global_fun[j]);
+
+		for (var k = 0; k < nf.length; k++) {
+			if(global_fun.indexOf(nf[k]) == -1){
+				result.push(nf[k]);
+			}
+		};
+
+	};
+
+	console.log("These Nested Functions can be hoisted based on second condition: [ " + result + " ]");
+	return result;
 }
 
 /**
