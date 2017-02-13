@@ -181,24 +181,41 @@ function get_write_list(f){
 * @param f - Function whose scope is being considered - Child functions scope ignored
 * @returns var_read_list - Array of all variables read in the function scope
 */
-function get_var_read_list(f){
-	var var_read_list = [];
+function get_read_list(f){
+	var var_read_list = [];	
+	var match = false;
+	var nested_nested_flag = false;
+	var nnv = '';
 	
-	//Getting the scope of functionin program stack
-	for(i=0; i<program_stack.length; i++){
-		//If any variable is read in the scope, push it in var_read_list array
-		if(program_stack[i].includes('read-var_')){
-			var_read_list.push(program_stack[i].split('_').splice(-1)[0]);
+	for (var i = 0; i < program_stack.length; i++) {
+		
+		if(program_stack[i] === 'invoke-fun-pre_'+f){
+			match = true;
+			continue;
 		}
-		//Ignore all write in nested function scope
-		if(program_stack[i].includes('invoke-fun-pre')){
-			break;
-		}
-		//At then end of function scope, stop checking for variables
+
 		if(program_stack[i] === 'invoke-fun_'+f){
 			break;
 		}
-	}
+
+		if(match){
+			if(program_stack[i].includes('invoke-fun-pre')){
+				nested_nested_flag = true;
+				nnv = program_stack[i].split('_').splice(-1)[0];
+				continue;
+			}
+
+			if(program_stack[i] === ('invoke-fun_'+nnv)){
+				nested_nested_flag = false;
+				continue;
+			}
+
+			if((nested_nested_flag === false) && (program_stack[i].includes('read-var_') || program_stack[i].includes('get-field_'))){
+				var_read_list.push(program_stack[i].split('_').splice(-1)[0]);
+			}
+		}
+
+	};
 	return var_read_list;
 }
 
@@ -325,11 +342,13 @@ function check_program_trace_for_dependencies(){
 			var f = program_stack[i].split('_').splice(-1)[0];
 			var f_nested_functions = get_nested_functions(f, i);
 			
+			console.log("Write:");
 			var write_list = get_write_list(f);
 			console.log(f + " : " + write_list);
 
-			//var read_list = get_read_list(f);
-			//console.log(f + " : " + read_list);
+			console.log("Read:");
+			var read_list = get_read_list(f);
+			console.log(f + " : " + read_list);
 		}
 	}
 }
