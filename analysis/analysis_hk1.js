@@ -27,10 +27,10 @@ var program_stack = [];
         /**
          * This callback is called before a property of an object is written.
          */
-        this.putFieldPre = function (iid, base, offset, val, isComputed, isOpAssign) {
+        /*this.putFieldPre = function (iid, base, offset, val, isComputed, isOpAssign) {
         	program_stack.push('put-field-pre_' + offset);
             return {base: base, offset: offset, val: val, skip: false};
-        };
+        };*/
 
         /**
          * This callback is called after a property of an object is written.
@@ -43,10 +43,10 @@ var program_stack = [];
         /**
          * This callback is called before a property of an object is accessed.
          */
-        this.getFieldPre = function (iid, base, offset, isComputed, isOpAssign, isMethodCall) {
+        /*this.getFieldPre = function (iid, base, offset, isComputed, isOpAssign, isMethodCall) {
         	program_stack.push('get-field-pre_' + offset);
             return {base: base, offset: offset, skip: false};
-        };
+        };*/
 
         /**
          * This callback is called after a property of an object is accessed.
@@ -81,9 +81,9 @@ var program_stack = [];
             console.log("Program Stack: ");
 			console.log(program_stack);
 			
-			check_program_trace_for_nested_functions();
-			get_nf_not_globally_declared();
-			//check_program_trace_for_dependencies();
+			//check_program_trace_for_nested_functions();
+			//get_nf_not_globally_declared();
+			check_program_trace_for_dependencies();
 			return {wrappedExceptionVal: wrappedExceptionVal, isBacktrack: false};
         };
 
@@ -137,26 +137,43 @@ function get_nested_functions(f, i){
 * @param f - Function whose scope is being considered - Child functions scope ignored
 * @returns var_write_list - Array of all variables written in the function scope
 */
-function get_var_write_list(f){
+function get_write_list(f){
 	var var_write_list = [];
+	var match = false;
+	var nested_nested_flag = false;
+	var nnv = '';
 	
-	//Getting the scope of function in program stack
-	for(i=0; i<program_stack.length; i++){
-		//If any variable is written in the scope, push it in var_write_list array
-		if(program_stack[i].includes('write-var_')){
-			var_write_list.push(program_stack[i].split('_').splice(-1)[0]);
+	for (var i = 0; i < program_stack.length; i++) {
+		
+		if(program_stack[i] === 'invoke-fun-pre_'+f){
+			match = true;
+			continue;
 		}
-		//Ignore all write in nested function scope
-		if(program_stack[i].includes('invoke-fun-pre')){
-			break;
-		}
-		//At then end of function scope, stop checking for variables
+
 		if(program_stack[i] === 'invoke-fun_'+f){
 			break;
 		}
-	} 
-	return var_write_list;
 
+		if(match){
+			if(program_stack[i].includes('invoke-fun-pre')){
+				nested_nested_flag = true;
+				nnv = program_stack[i].split('_').splice(-1)[0];
+				continue;
+			}
+
+			if(program_stack[i] === ('invoke-fun_'+nnv)){
+				nested_nested_flag = false;
+				continue;
+			}
+
+			if((nested_nested_flag === false) && (program_stack[i].includes('write-var_') || program_stack[i].includes('put-field_'))){
+				var_write_list.push(program_stack[i].split('_').splice(-1)[0]);
+			}
+		}
+
+	};
+
+	return var_write_list;
 }
 
 /**
@@ -302,39 +319,18 @@ function get_nf_not_globally_declared(){
 * 
 */
 function check_program_trace_for_dependencies(){
+
 	for(i=0; i<program_stack.length; i++){
 		if(program_stack[i].includes('invoke-fun-pre')){
 			var f = program_stack[i].split('_').splice(-1)[0];
 			var f_nested_functions = get_nested_functions(f, i);
-			var hoisted_functions = [];
-
-			console.log(f + ' has these nested functions: ' + f_nested_functions);
 			
-			//List of variables written by Parent Function
-			var f_written_variables = get_var_write_list(f);
-			console.log(f + ' writes to: ' + f_written_variables);
+			var write_list = get_write_list(f);
+			console.log(f + " : " + write_list);
 
-			//List of variables read by child functions
-			for (j=0; j<f_nested_functions.length; j++){
-				
-				//Array of all read varables in child scope
-				var nestedF_read_var_list = get_var_read_list(f_nested_functions[j]);
-				
-				//Check if the read variable is written in parent scope
-				var result = is_var_from_parent(nestedF_read_var_list, f_written_variables);
-				if (result == true){
-					//Variable is from parent scope.. Not hoisted..
-					console.log('Variable '+ nestedF_read_var_list[k] +' is coming from parent scope..');
-					console.log('Function'+ f_nested_functions[j] +' is not a hoisted function.');
-					
-				}
-				else{
-					hoisted_functions.push(f_nested_functions[j]);
-				}
-				console.log(f + 'has hoisted functions:' + hoisted_functions);
-			}
+			//var read_list = get_read_list(f);
+			//console.log(f + " : " + read_list);
 		}
 	}
-
 }
 

@@ -11,7 +11,12 @@ function g(){}
 g();
 
 function t(a) {
+	var c = 3;
+
 	function s(viu) {
+		var z = 5;
+		var str = 'abc';
+
 		function r(ert) {
 			return x + ert;
 		}
