@@ -7,7 +7,11 @@ var program_stack = [];
 
         this.invokeFunPre = function (iid, f, base, args, isConstructor, isMethod, functionIid, functionSid) {
             program_stack.push('invoke-fun-pre_' + f.name);
-            function_list.push(f.name);			
+            
+            if(f.name.length > 0){
+            	function_list.push(f.name);
+            }
+
             return {f: f, base: base, args: args, skip: false};
         };
 
@@ -75,10 +79,14 @@ var program_stack = [];
 
 
         this.scriptExit = function (iid, wrappedExceptionVal) {
-        	/*console.log("Function List: ");
+        	
+        	//check_for_anonymous_functions();
+
+        	console.log("Function List: ");
             console.log(function_list);
             console.log("Program Stack: ");
-			console.log(program_stack);*/
+			console.log(program_stack);
+			return;
 
 			console.log();
 			console.log("********************************************");
@@ -109,6 +117,27 @@ var program_stack = [];
     
 	sandbox.analysis = new MyAnalysis();
 })(J$);
+
+function check_for_anonymous_functions(){
+	
+	// For completing the starting block
+	func_name = '';
+	func_stack = [];
+
+	for (var i = 0; i < program_stack.length; i++) {
+		if(program_stack[i] == 'invoke-fun-pre_'){
+			func_name = program_stack[i-1].split('_').splice(-1)[0];
+			program_stack[i] = program_stack[i] + func_name;
+			function_list.push(func_name);
+			func_stack.push(func_name);		
+		}
+
+		if(program_stack[i] == 'invoke-fun_'){
+			program_stack[i] = program_stack[i] + func_stack.pop();
+		}
+	};		
+
+}
 
 function get_nested_functions(f, i){
 	var match = false;
