@@ -17,8 +17,7 @@ var program_stack = [];
         };
 
 		this.declare = function (iid, name, val, isArgument, argumentIndex, isCatchParam) {
-			program_stack.push('declare_' + name);
-			console.log(iid + ' : ' + name);
+			program_stack.push('declare_' + name);			
             return {result: val};
         };
 
@@ -76,14 +75,30 @@ var program_stack = [];
 
 
         this.scriptExit = function (iid, wrappedExceptionVal) {
-        	console.log("Function List: ");
+        	/*console.log("Function List: ");
             console.log(function_list);
             console.log("Program Stack: ");
-			console.log(program_stack);
-			
+			console.log(program_stack);*/
+
+			console.log();
+			console.log("********************************************");
+			console.log();
+
 			//check_program_trace_for_nested_functions();
-			//get_nf_not_globally_declared();
-			check_program_trace_for_dependencies();
+			var result1 = check_program_trace_for_dependencies();
+			var result2 = get_nf_not_globally_declared();
+			
+			var final_result = result1.filter(function(n) {
+			  return result2.indexOf(n) > -1;
+			});
+
+			console.log("Analysis suggests that the following functions should be hoisted!");
+			console.log(final_result);
+
+			console.log();
+			console.log("********************************************");
+			console.log();
+
 			return {wrappedExceptionVal: wrappedExceptionVal, isBacktrack: false};
         };
 
@@ -220,27 +235,6 @@ function get_read_list(f){
 }
 
 /**
-* Checks if the variable is from the parent function scope or not
-* @param f - Function where the variable belongs to
-* @param parent_f - Parent function of the testing function
-* @param v - Variable to be tested
-* @returns - True, if the variable is coming from parent scope; False, if the variable is not coming from parent scope.
-*/
-function is_var_from_parent(nestedF_read_var_list, f_written_variables){
-	var result = false;
-	for (i=0; i<nestedF_read_var_list.length; i++){
-		//Check if the read variable is already there in written variables list
-		if(f_written_variables.indexOf(nestedF_read_var_list[i] > -1)){
-			//Variable is from parent scope - Function not hoisted..
-			result = true;
-		}
-	}
-	return result;
-}
-
-
-
-/**
 * Checks program trace for nested functions for all included functions
 * @returns - 
 */
@@ -249,7 +243,7 @@ function check_program_trace_for_nested_functions(){
 		if(program_stack[i].includes('invoke-fun-pre')){
 			var f = program_stack[i].split('_').splice(-1)[0];
 			var f_nested_functions = get_nested_functions(f, i);
-			//console.log(f + ' has these nested functions: ' + f_nested_functions);
+			console.log(f + ' has these nested functions: ' + f_nested_functions);
 		}
 	}
 
@@ -328,7 +322,7 @@ function get_nf_not_globally_declared(){
 
 	};
 
-	console.log("These Nested Functions can be hoisted based on second condition: [ " + result + " ]");
+	//console.log("These Nested Functions can be hoisted based on second condition: [ " + result + " ]");
 	return result;
 }
 
@@ -336,20 +330,89 @@ function get_nf_not_globally_declared(){
 * 
 */
 function check_program_trace_for_dependencies(){
+	
+	var result = [];
 
+	// Works for global level hoisting
+	//Getting all the global function
+	/*var global_fun = [];
+	var i = 0;
+
+	while(true){
+
+		if(!program_stack[i].includes('declare_')){
+			break;
+		}
+
+		if(function_list.indexOf(program_stack[i].split('_').splice(-1)[0]) > -1){
+			global_fun.push(program_stack[i].split('_').splice(-1)[0]);
+		}
+
+		i++;
+	}
+
+	for (var j = 0; j < global_fun.length; j++) {
+		var nf = get_nf_of_global_fun_f(global_fun[j]);
+
+		var write_list = get_write_list(global_fun[j]);
+		//console.log(global_fun[j] + " writes to: " + write_list);
+
+		var dependent_flag = false;
+		for (var k = 0; k < nf.length; k++) {
+
+			dependent_flag = false;
+			var read_list = get_read_list(nf[k]);
+			//console.log(nf[k] + " reads from: " + read_list);
+
+			for (var l = 0; l < read_list.length; l++) {
+				//console.log(read_list[l]);
+				if(write_list.indexOf(read_list[l]) > -1){
+					dependent_flag = true;
+				}
+			};
+
+			//console.log(dependent_flag);
+
+			if(dependent_flag === false){
+				result.push(nf[k]);
+			}
+		};
+
+	};*/
+
+	// Works for multi level hoisting
 	for(i=0; i<program_stack.length; i++){
 		if(program_stack[i].includes('invoke-fun-pre')){
 			var f = program_stack[i].split('_').splice(-1)[0];
-			var f_nested_functions = get_nested_functions(f, i);
+			var nf = get_nested_functions(f, i);
 			
-			console.log("Write:");
 			var write_list = get_write_list(f);
-			console.log(f + " : " + write_list);
+			//console.log(f + " writes to: " + write_list);
 
-			console.log("Read:");
-			var read_list = get_read_list(f);
-			console.log(f + " : " + read_list);
+			var dependent_flag = false;
+			for (var k = 0; k < nf.length; k++) {
+
+				dependent_flag = false;
+				var read_list = get_read_list(nf[k]);
+				//console.log(nf[k] + " reads from: " + read_list);
+
+				for (var l = 0; l < read_list.length; l++) {
+					//console.log(read_list[l]);
+					if(write_list.indexOf(read_list[l]) > -1){
+						dependent_flag = true;
+					}
+				};
+
+				//console.log(dependent_flag);
+
+				if(dependent_flag === false){
+					result.push(nf[k]);
+				}
+			};
 		}
 	}
+
+	//console.log("These Nested Functions can be hoisted based on first condition: [ " + result + " ]");
+	return result;
 }
 

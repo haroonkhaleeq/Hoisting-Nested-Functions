@@ -5,8 +5,8 @@ function f(a) {
 	b.a = 4;
 
 	// Doesn't cover this scenario
-	//var c = 5;
-	//c.a = 4;
+	var c = 5;
+	c.a = 4;
 
 	function g(step) {
 		return x + step + b.a;
