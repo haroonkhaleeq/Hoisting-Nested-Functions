@@ -1,15 +1,20 @@
 
 var function_list = [];
 var program_stack = [];
+var function_ids = [];
 
 (function (sandbox) {
     function MyAnalysis() {
 
         this.invokeFunPre = function (iid, f, base, args, isConstructor, isMethod, functionIid, functionSid) {
+            
             program_stack.push('invoke-fun-pre_' + f.name);
             
-            if(f.name.length > 0){
-            	function_list.push(f.name);
+            if(f.name.length > 0){            	
+            	if(function_ids.indexOf(functionIid) == -1){
+            		function_list.push(f.name);
+            		function_ids.push(functionIid);	
+            	}            	
             }
 
             return {f: f, base: base, args: args, skip: false};
@@ -80,13 +85,15 @@ var program_stack = [];
 
         this.scriptExit = function (iid, wrappedExceptionVal) {
         	
-        	//check_for_anonymous_functions();
+        	check_for_anonymous_functions();
 
+        	/*console.log("Function IDS");
+        	console.log(function_ids);
         	console.log("Function List: ");
             console.log(function_list);
             console.log("Program Stack: ");
-			console.log(program_stack);
-			return;
+			console.log(program_stack);*/
+			//return;
 
 			console.log();
 			console.log("********************************************");
@@ -96,6 +103,11 @@ var program_stack = [];
 			var result1 = check_program_trace_for_dependencies();
 			var result2 = get_nf_not_globally_declared();
 			
+			// Removing Duplicates for recursive functions
+			result1 = result1.filter(function(elem, index, self) {
+			    return index == self.indexOf(elem);
+			})
+
 			var final_result = result1.filter(function(n) {
 			  return result2.indexOf(n) > -1;
 			});
@@ -126,6 +138,10 @@ function check_for_anonymous_functions(){
 
 	for (var i = 0; i < program_stack.length; i++) {
 		if(program_stack[i] == 'invoke-fun-pre_'){
+			
+			if(i == 0)
+				continue;
+
 			func_name = program_stack[i-1].split('_').splice(-1)[0];
 			program_stack[i] = program_stack[i] + func_name;
 			function_list.push(func_name);
@@ -147,6 +163,9 @@ function get_nested_functions(f, i){
 
 	while(match == false){
 		i++;
+
+		if(program_stack.length == i)
+			break;
 
 		if(program_stack[i].includes('invoke-fun-pre')){
 			nnv = program_stack[i].split('_').splice(-1)[0];
@@ -328,6 +347,9 @@ function get_nf_not_globally_declared(){
 	var result = [];
 
 	while(true){
+
+		if(program_stack.length == 0)
+			break;
 
 		if(!program_stack[i].includes('declare_')){
 			break;
