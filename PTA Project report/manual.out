@@ -1,0 +1,19 @@
+\BOOKMARK [0][-]{chapter.1}{Abstract}{}% 1
+\BOOKMARK [0][-]{chapter.2}{Introduction}{}% 2
+\BOOKMARK [0][-]{chapter.3}{Hoisting in JavaScript}{}% 3
+\BOOKMARK [1][-]{section.3.1}{What is Hoisting}{chapter.3}% 4
+\BOOKMARK [1][-]{section.3.2}{Nested functions in JavaScript}{chapter.3}% 5
+\BOOKMARK [1][-]{section.3.3}{Hoisted functions in JavaScript}{chapter.3}% 6
+\BOOKMARK [1][-]{section.3.4}{Advantage of Hoisted functions over Nested functions}{chapter.3}% 7
+\BOOKMARK [0][-]{chapter.4}{Jalangi}{}% 8
+\BOOKMARK [0][-]{chapter.5}{Approach to the Goals}{}% 9
+\BOOKMARK [1][-]{section.5.1}{Goals}{chapter.5}% 10
+\BOOKMARK [1][-]{section.5.2}{Approach}{chapter.5}% 11
+\BOOKMARK [2][-]{subsection.5.2.1}{Step 1: Identifying the nested functions}{section.5.2}% 12
+\BOOKMARK [2][-]{subsection.5.2.2}{Step 2: Identifying variable's usage scope}{section.5.2}% 13
+\BOOKMARK [2][-]{subsection.5.2.3}{Step 3: Identifying functions with same name}{section.5.2}% 14
+\BOOKMARK [0][-]{chapter.6}{Corner Cases}{}% 15
+\BOOKMARK [1][-]{section.6.1}{Anonymous Functions}{chapter.6}% 16
+\BOOKMARK [1][-]{section.6.2}{Recursive Functions}{chapter.6}% 17
+\BOOKMARK [1][-]{section.6.3}{Property of object}{chapter.6}% 18
+\BOOKMARK [0][-]{chapter.7}{Conclusions}{}% 19

@@ -1,0 +1,215 @@
+%\textit{}
+\documentclass[accentcolor=tud0b,12pt,paper=a4]{tudreport}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{pdfpages}
+
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+
+\usepackage[utf8]{inputenc}
+\usepackage{parcolumns}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{perpage} %the perpage package
+\MakePerPage{footnote} %the perpage package command
+
+
+%Added for JavaScript syntax highlighting
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\lstdefinelanguage{JavaScript}{
+	keywords={break, case, catch, continue, debugger, default, delete, do, else, false, finally, for, function, if, in, instanceof, new, null, return, switch, this, throw, true, try, typeof, var, void, while, with},
+	morecomment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	morestring=[b]',
+	morestring=[b]",
+	ndkeywords={class, export, boolean, throw, implements, import, this},
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywordstyle=\color{darkgray}\bfseries,
+	identifierstyle=\color{black},
+	commentstyle=\color{purple}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	sensitive=true
+}
+
+\lstset{
+	language=JavaScript,
+	extendedchars=true,
+	basicstyle=\footnotesize\ttfamily,
+	showstringspaces=true,
+	showspaces=false,
+	numberstyle=\footnotesize,
+	numbersep= 4pt,
+	tabsize=4,
+	breaklines=true,
+	showtabs=false,
+	captionpos=b,
+	xleftmargin=\parindent
+}
+%end JavaScript syntax highlighting
+
+
+\lstset{
+basicstyle=\small,
+} 
+\newcommand{\titlerow}[2]{
+	\begin{parcolumns}[colwidths={1=.15\linewidth}]{2}
+		\colchunk[1]{#1:} 
+		\colchunk[2]{#2}
+	\end{parcolumns}
+	\vspace{0.2cm}
+}
+
+
+\title{Hoisting Nested Functions}
+\subsubtitle{%
+	\titlerow{Developer}{%
+		Haroon Khaleeq <haroon.khaleeq@stud.tu-darmstadt.de>\\
+		Pranay Sarkar <pranay.sarkar@stud.tu-darmstadt.de>\\
+		}
+	\titlerow{Supervisor}{%
+		Marina Billes <marina.billes@crisp-da.de>\\
+		Software Lab -SOLA\\
+		FB 20 Informatik}}
+
+\institution{\emph{Program Testing \& Analysis} Project work \\ Winter 2016-17 \\Fachbereich Informatik (FB 20)}
+
+\begin{document}
+
+	\maketitle
+	\tableofcontents 
+	
+\chapter{Abstract}
+JavaScript is widely used for writing client-side web applications and is getting increasingly popular for writing mobile applications. JavaScript is over fifteen years old; nevertheless, the language is still misunderstood by what is perhaps the majority of developers and designers using the language. One of the most powerful, yet misunderstood, aspects of JavaScript are functions. The ability of defining a function inside another function and passing function as an argument of another function provides more flexibility to the programmer to build higher order function which intern supports higher abstraction. But misuse of this prower can lead to bad coding standard. While terribly vital to JavaScript, their misuse can introduce inefficiency and hinder an application's performance. The Google's V8 JavaScript engine nested version (functions inside
+other functions) is 42\% slower than the equivalent version without this nesting. Thus we present results of a dynamic analysis aiming to detect these functions which can be hoisted and defined outside the inner function it is declared. This helps reducing unnecessary stack space. Unlike C, C++, and Java, there are not that many tools available for analysis and testing of JavaScript applications. In this report, we are going to present a dynamic analysis for identifying these nested function (hoistable functions) using simple yet powerful framework, called Jalangi. Other than reporting the hoistable function out analysis also results the total number functions that were executed, not executed, not hoistable and outer functions. Further the analysis is evaluated by running on well known libraries of node.js namely \emph{underscore}, \emph{loadash}, \emph{q} . We believe that all no false positives were reported; hence the analysis is quite efficient
+and effective.
+
+\chapter{Introduction}	
+Today's JavaScript engines are light-years ahead of the engines of ten years ago, but they do not optimize everything. What they don't optimize is left to developers. This is pushing JavaScript developers to ensure their code is efficient and has a good performance. The problem with nested functions is one characteristic of JavaScript that hinders performance: the nested function is repeatedly created due to repeated calls to the outer function. The misuse of functions
+can introduce inefficiency and hinder an application's performance.  
+
+
+The ability to define a nested function addresses new programming construct which provides more flexibility and power to programmer. but if misused the advantage it provides can turn to a disadvantage. nested function helps programmer to use in-line function call and to define singleton function which has their own advantages. It also provides ability to create higher order functions which can be passed as arguments and returned as value. This new programming construct is useful when we need more abstraction and reuse in lower level. Using function expressions to define a
+function inside another function gives the ability to define a function dynamically and determine which function to use programmatically. The ability to access a variable defined in the same scope
+an inner function is defined promotes the programming construct known as clause. Clauses also have an advantage in web based programming. But it depends on the situation which programmer has to decide whether to use nested functions. It is a performance overkill both in terms of performance and memory consumption if the nested function are defined in a loop or defined inside a function
+which is called several times.
+
+
+\chapter{Hoisting in JavaScript}
+It should be mentioned that JavaScript have function-level scope instead of block-level scope like other languages. That brings 'Hoisting' into the scope of discussion.
+
+\section{What is Hoisting}
+
+In JavaScript a name enters in scope in four different ways:
+\begin{itemize}
+	\item \textbf{Language - defined:} All scopes are, by default, given the names $this$ and $arguments$
+	\item \textbf{Formal parameters:} Functions that have named formal parameters, scoped to the body of the function
+	\item \textbf{Function decelerations:} Anything in the form of \emph{foo() \{\}}
+	\item \textbf{Variable declarations:} These take the form \emph{var foo;}
+\end{itemize}
+
+Function and variable decelerations are always moved invisibly to the top of their containing scope by the JavaScript interpreter. This is called Hoisted property of JavaScript. For example, this piece of code:
+%\begin{lstlisting}
+\begin{lstlisting}[language=JavaScript]
+function foo() {
+  bar();
+  var x = 50;
+}
+\end{lstlisting}
+
+is interpreted like this:
+\begin{lstlisting}[language=JavaScript]
+function foo() {
+ var x;
+ bar();
+ x = 50;
+}
+\end{lstlisting}
+
+\section{Nested functions in JavaScript}
+Functions definitions inside other functions are allowed in JavaScript. These kind of functions are called  nested functions. Nested functions are created every time outer function is called. For example:
+\begin{lstlisting}[language=JavaScript]
+var x = 23;
+function f(a){
+ function g(step){
+  return x + step;
+ }
+ g(a);
+}
+f(2);
+\end{lstlisting}
+
+Here the function \emph{g(step)} does not depend on the surrounding function \emph{f(a)}
+\section{Hoisted functions in JavaScript}
+The given nested function in the last example can be converted into Hoisted function in the following way: 
+\begin{lstlisting}[language=JavaScript]
+var x = 23;
+function g(step){
+ return x + step;
+}
+function f(a){
+ g(a);
+}
+f(2);
+\end{lstlisting}
+
+\section{Advantage of Hoisted functions over Nested functions}
+It is observed that the nested version of the function in the example is \textbf{42\%} slower than Google's V8 JavaScript engine than the equivalent hoisted version where $g()$ is defined outside of $f()$. It should be mentioned that function's name doesn't get hoisted if it is part of a function expression.
+
+\chapter{Jalangi}
+Description of Jalangi, the used framework for dynamic analysis.
+
+\chapter{Approach to the Goals}
+\section{Goals}
+Main goals of the project are: 
+\begin{enumerate}
+	\item Dynamic analysis of the JavaScript file done using Jalangi framework.
+	\item At first the dynamic analysis should fins all nested functions.
+	\item Then developing a dynamic analysis to detect all functions that can be hoisted or are already hoisted.
+\end{enumerate}
+\section{Approach}
+We have designed our dynamic analysis where we are using $Program Stack$ for storing all information fetched using Jalangi callbacks. $Function List$ contains all the functions found during the dynamic test. $Functions IDs$ array consist of all function ID fetched during the analysis. The dynamic analysis the following things:
+\subsection{Step 1: Identifying the nested functions}
+Jalangi analysis identifies which functions are nested functions. The following Jalangi hooks are used for that purpose: \emph{invokeFunPre()}, \emph{invokeFun()}, \emph{declare()}. 
+This following function \emph{get\_nested\_functions()} is used to fetch a list of all nested functions inside a function.
+
+\subsection{Step 2: Identifying variable's usage scope}
+As per the definition of Hoisted functions, the function can not use any variable declared in the parent scope of that function. We approach the problem in this following way:
+\begin{enumerate}
+	\item Identify all variables that is being written to, in the parent scope and make a list of them.
+	\item Identify all variables that is being read in the child or nested function. 
+	\item If there is any such variable which is written to in the parent scope and is read from the nested child function, then the child function is not a hoisted function or it can not be hoisted. That function is excluded from the final list of hoisted functions.
+	\item The same steps are followed for the all properties of the all used objects.
+\end{enumerate}
+These following Jalangi callbacks are used for this purpose: \emph{getField()}, \emph{putField()}, \emph{read()}, \emph{write()}.
+
+\subsection{Step 3: Identifying functions with same name}
+Jalangi analysis tries to identify if there is already a function having same name as nested function in any scope, starting from the global scope. This function \emph{get\_nf\_not\_globally\_declared()} returns a list of all nested functions which does not exist globally with the same function name (i.e. no duplicate function names).
+
+<   To be added: Anonymous function handling   >
+
+
+\chapter{Corner Cases}
+During the dynamic analysis of hoisted functions with Jalangi we happen to come across some cases which can not be detected properly using Jalangi 2 framework. Some of the corner cases are described here.
+\section{Anonymous Functions}
+..
+\section{Recursive Functions}
+..
+\section{Property of object}
+If there are different properties of different object, Jalangi 2 can not properly detect the base object of a particular property. For example, in a program if we have
+\begin{lstlisting}[language=JavaScript]
+var b.a = 23;
+var c.a = 44;
+\end{lstlisting}
+Differentiating between those 2 a's is not possible with Jalangi predefined callback functions.
+
+\chapter{Conclusions}
+We have developed a dynamic analysis which was tested on three node.js libraries. The hoistable functions detected in all cases where checked manually in the source code and no false positives were found. The analysis also provides additional information on the functions which can not be hoisted or not hoistable. 
+
+
+
+\end{document}
