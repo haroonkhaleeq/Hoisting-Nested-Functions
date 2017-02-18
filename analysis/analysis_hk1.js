@@ -16,7 +16,8 @@ var function_ids = [];
             //pushing the call-back with the function name to the program stack
             program_stack.push('invoke-fun-pre_' + f.name);
             
-            //
+            //If the function name exist unless it is an anonymous function then only push function name and function id to their respective containers
+            // Otherwise the containers will be bad!
             if(f.name.length > 0){            	
             	if(function_ids.indexOf(functionIid) == -1){
             		function_list.push(f.name);
@@ -89,25 +90,23 @@ var function_ids = [];
 
         
 
-
+        // At the end of the execution compute and show the results
         this.scriptExit = function (iid, wrappedExceptionVal) {
         	
+        	//Make appropriate changes in the program stack to detect anonymous functions and self-invokating functions
         	check_for_anonymous_functions();
         	
-        	/*console.log("Function IDS");
-        	console.log(function_ids);
-        	console.log("Function List: ");
-            console.log(function_list);
-            console.log("Program Stack: ");
-			console.log(program_stack);*/
-			//return;
-
 			console.log();
 			console.log("********************************************");
 			console.log();
 
+			// This function tells which function has which nested functions
 			//check_program_trace_for_nested_functions();
+
+			// Getting all the nested functions which fulfill the condition 1st of the hoistability which is independent of parent function
 			var result1 = check_program_trace_for_dependencies();
+
+			// Getting all the nested functions which fulfill the condition 2nd of the hoistability which is there exist no function in the outer scope with the same name
 			var result2 = get_nf_not_globally_declared();
 			
 			// Removing Duplicates for recursive functions
@@ -115,6 +114,7 @@ var function_ids = [];
 			    return index == self.indexOf(elem);
 			})
 
+			// Merging the results in the final_result array and showing it to the user!
 			var final_result = result1.filter(function(n) {
 			  return result2.indexOf(n) > -1;
 			});
@@ -137,6 +137,9 @@ var function_ids = [];
 	sandbox.analysis = new MyAnalysis();
 })(J$);
 
+/**
+* Alters the program_stack with appropriate keywords for anonymous functions
+*/
 function check_for_anonymous_functions(){
 	
 	// For completing the starting block
@@ -146,6 +149,7 @@ function check_for_anonymous_functions(){
 	for (var i = 0; i < program_stack.length; i++) {
 		if(program_stack[i] == 'invoke-fun-pre_'){
 			
+			//If the program starts with a self-invokating function then add "anonymous" keyword which will help in further processing
 			if(i == 0){
 				func_stack.push("anonymous");
 				program_stack[i] = program_stack[i] + "anonymous";
@@ -153,12 +157,14 @@ function check_for_anonymous_functions(){
 				continue;
 			}
 
+			// For anonymous functions without names assign them the names to which these functions are assigned.
 			func_name = program_stack[i-1].split('_').splice(-1)[0];
 			program_stack[i] = program_stack[i] + func_name;
 			function_list.push(func_name);
 			func_stack.push(func_name);		
 		}
 
+		//Completing the program stack block ending with appropriate keywords for anonymous functions.
 		if(program_stack[i] == 'invoke-fun_'){
 			program_stack[i] = program_stack[i] + func_stack.pop();
 		}
@@ -282,27 +288,34 @@ function get_read_list(f){
 	
 	for (var i = 0; i < program_stack.length; i++) {
 		
+		// When lookup f is found the check the match to true and continue
 		if(program_stack[i] === 'invoke-fun-pre_'+f){
 			match = true;
 			continue;
 		}
 
+		// When lookup f scope ends the stop the lookup
 		if(program_stack[i] === 'invoke-fun_'+f){
 			break;
 		}
 
+		// Getting the read variables of that function f and checking for reads and ignores further nested.
 		if(match){
+
+			// Checks nested_nested_flag to avoid further nesting
 			if(program_stack[i].includes('invoke-fun-pre')){
 				nested_nested_flag = true;
 				nnv = program_stack[i].split('_').splice(-1)[0];
 				continue;
 			}
 
+			// Checks nested_nested_flag to false for that nested function nnv and continue
 			if(program_stack[i] === ('invoke-fun_'+nnv)){
 				nested_nested_flag = false;
 				continue;
 			}
 
+			// Storing all the read variables and properties to the array for that function f
 			if((nested_nested_flag === false) && (program_stack[i].includes('read-var_') || program_stack[i].includes('get-field_'))){
 				var_read_list.push(program_stack[i].split('_').splice(-1)[0]);
 			}
@@ -314,6 +327,7 @@ function get_read_list(f){
 }
 
 /**
+* Developed Initially for testing!
 * Checks program trace for nested functions for all included functions
 * @returns - 
 */
@@ -322,7 +336,7 @@ function check_program_trace_for_nested_functions(){
 		if(program_stack[i].includes('invoke-fun-pre')){
 			var f = program_stack[i].split('_').splice(-1)[0];
 			var f_nested_functions = get_nested_functions(f, i);
-			console.log(f + ' has these nested functions: ' + f_nested_functions);
+			//console.log(f + ' has these nested functions: ' + f_nested_functions);
 		}
 	}
 
@@ -330,7 +344,7 @@ function check_program_trace_for_nested_functions(){
 
 /**
  Returns all the nested functions of a global function f
-
+ @ Returns - all the nested function of a global function f
 **/
 function get_nf_of_global_fun_f(f){
 	var result = [];
@@ -340,9 +354,11 @@ function get_nf_of_global_fun_f(f){
 
 	while(true){
 
+		// Sto processsing when the stack is all traversed
 		if(program_stack.length == i)
 			break;
 
+		// Mark when the scope is started for the function f
 		if(program_stack[i].includes('invoke-fun-pre_'+f)){
 			match = true;
 		}
@@ -360,6 +376,7 @@ function get_nf_of_global_fun_f(f){
 
 		}
 
+		// Stop the processing when the scope of the function ends.
 		if(program_stack[i].includes('invoke-fun_'+f)){
 			break;
 		}
@@ -386,16 +403,19 @@ function get_nf_not_globally_declared(){
 			break;
 		}
 
+		// Stop traversing the program stack because all the declarations are first then on we don't need to analyse
 		if(!program_stack[i].includes('declare_')){
 			break;
 		}
 
+		// stores the function names to the global_fun array and continue
 		if(function_list.indexOf(program_stack[i].split('_').splice(-1)[0]) > -1){
 			global_fun.push(program_stack[i].split('_').splice(-1)[0]);
 			i++;
 			continue;
 		}
 
+		// If the function is anonymous the push the keyword anonymous (this helps with processing of anonymous functions)
 		if(program_stack[i].split('_').splice(-1)[0] == ""){
 			i++;
 			global_fun.push("anonymous");
@@ -405,6 +425,7 @@ function get_nf_not_globally_declared(){
 		i++;
 	}
 
+	// Getting all their respective nested functions of those global functions
 	for (var j = 0; j < global_fun.length; j++) {
 		var nf = get_nf_of_global_fun_f(global_fun[j]);
 
@@ -421,7 +442,8 @@ function get_nf_not_globally_declared(){
 }
 
 /**
-* 
+* Checks the program to find out nested functions which fulfills the first condition of hoistability
+ @ Returns the result array which contains all the nested functions which fulfills the first condition of hoistability
 */
 function check_program_trace_for_dependencies(){
 	
@@ -480,12 +502,14 @@ function check_program_trace_for_dependencies(){
 			var f = program_stack[i].split('_').splice(-1)[0];
 			var nf = get_nested_functions(f, i);
 			
+			// Getting all the writes be the parent function f
 			var write_list = get_write_list(f);
 			
 			var dependent_flag = false;
 			for (var k = 0; k < nf.length; k++) {
 
 				dependent_flag = false;
+				// Getting all the reads by the child function nf[k] of that function f
 				var read_list = get_read_list(nf[k]);
 				
 				for (var l = 0; l < read_list.length; l++) {
