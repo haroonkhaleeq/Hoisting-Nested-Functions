@@ -165,25 +165,35 @@ function check_for_anonymous_functions(){
 	};		
 
 }
+/**
+* Gets a list of nested functions inside the specified function
+* 
+* @param f - Function whose scope is being considered for fincing the child function
+* @param i - Index of program stack from where the search for nested function begins (scope of the function starts there)
+* @returns result - Array of all nested functions
+*/
 
 function get_nested_functions(f, i){
 	var match = false;
+	//Array to store all nested functions
 	var result = [];
+	//Flag for nesting tester
 	var nested_nested_flag = false;
+	//Variable to store nested function name(s)
 	var nnv = '';
 
 	while(match == false){
 		i++;
-
+		// If the program stack if fully iterated, stop iteration.
 		if(program_stack.length == i)
 			break;
-
+		// If the program stack have invokeFunPre() calls, then there is a nested function
 		if(program_stack[i].includes('invoke-fun-pre')){
 			nnv = program_stack[i].split('_').splice(-1)[0];
 			nested_nested_flag = true;
 			continue;
 		}
-		
+		// If the program stack have invokeFun() then the nested child function scope ends there
 		if(program_stack[i] === ('invoke-fun_'+nnv)){
 			nested_nested_flag = false;
 			continue;
@@ -192,16 +202,16 @@ function get_nested_functions(f, i){
 		if(nested_nested_flag === true){
 			continue;
 		}
-
+		// If any function is declared in the scope, push the name of the function in the 'result' array
 		if(program_stack[i].includes('declare_') && function_list.includes(program_stack[i].split('_').splice(-1)[0])){
 			result.push(program_stack[i].split('_').splice(-1)[0]);
 		}
-
+		// End the function if the end of the scope for the specfied function is found in the program stack
 		if(program_stack[i] === 'invoke-fun_'+f){
 			match = true;
 		}
 	}	
-	
+	//Return the list of all nested function in the specified function scope
 	return result;
 }
 
@@ -212,41 +222,46 @@ function get_nested_functions(f, i){
 * @returns var_write_list - Array of all variables written in the function scope
 */
 function get_write_list(f){
+	// Array to store the list of written variables
 	var var_write_list = [];
+	// Flag for matching function scope
 	var match = false;
+	// Flag used for moere than one level of nesting in the functions
 	var nested_nested_flag = false;
+	// Variable to store nested function name(s)
 	var nnv = '';
 	
 	for (var i = 0; i < program_stack.length; i++) {
-		
+		// Start from the begining of th scpoe of the function i.e. invokeFunPre()
 		if(program_stack[i] === 'invoke-fun-pre_'+f){
 			match = true;
 			continue;
 		}
-
+		// If there is any occurance of invokeFun() for the function the scpoe ends, finish this function execution
 		if(program_stack[i] === 'invoke-fun_'+f){
 			break;
 		}
-
+		// When inside the function scope search for more than 1 level of nesting
 		if(match){
+			// More than 1 level of nesting exists
 			if(program_stack[i].includes('invoke-fun-pre')){
 				nested_nested_flag = true;
 				nnv = program_stack[i].split('_').splice(-1)[0];
 				continue;
 			}
-
+			// More than 1 level of nesting scope ends
 			if(program_stack[i] === ('invoke-fun_'+nnv)){
 				nested_nested_flag = false;
 				continue;
 			}
-
+			// If write() is occured in the scope, push the variable name to the resuing array which will be returned
 			if((nested_nested_flag === false) && (program_stack[i].includes('write-var_') || program_stack[i].includes('put-field_'))){
 				var_write_list.push(program_stack[i].split('_').splice(-1)[0]);
 			}
 		}
 
 	};
-
+	//Return the list of variable on which write() operation is performed
 	return var_write_list;
 }
 
@@ -256,9 +271,13 @@ function get_write_list(f){
 * @returns var_read_list - Array of all variables read in the function scope
 */
 function get_read_list(f){
+	// Array to store the list of read variables
 	var var_read_list = [];	
+	// Flag for matching function scope
 	var match = false;
+	// Flag used for moere than one level of nesting in the functions
 	var nested_nested_flag = false;
+	// Variable to store nested function name(s)
 	var nnv = '';
 	
 	for (var i = 0; i < program_stack.length; i++) {
@@ -290,6 +309,7 @@ function get_read_list(f){
 		}
 
 	};
+	//Return the list of variable on which read() operation is performed
 	return var_read_list;
 }
 
@@ -310,6 +330,7 @@ function check_program_trace_for_nested_functions(){
 
 /**
  Returns all the nested functions of a global function f
+
 **/
 function get_nf_of_global_fun_f(f){
 	var result = [];
@@ -351,6 +372,7 @@ function get_nf_of_global_fun_f(f){
 
 /**
  Returns all those nested functions which doesn't exist globally with the same function name
+ @returns - Array of global function names which are not declared in global scope. 
 **/
 function get_nf_not_globally_declared(){
 

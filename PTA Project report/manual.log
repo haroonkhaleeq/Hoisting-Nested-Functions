@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.5.4)  16 FEB 2017 00:34
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.5.4)  18 FEB 2017 15:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1283,7 +1283,7 @@ Package parcolumns Info: Width of column 1 set to 72.1248pt on input line 84.
 Package parcolumns Info: Width of column 2 calculated as 385.72682pt on input l
 ine 84.
 
-<tud_logo.pdf, id=80, 157.58875pt x 63.23625pt>
+<tud_logo.pdf, id=104, 157.58875pt x 63.23625pt>
 File: tud_logo.pdf Graphic file (type pdf)
  <use tud_logo.pdf>
 Package pdftex.def Info: tud_logo.pdf used on input line 84.
@@ -1354,34 +1354,41 @@ File: ts15ch.fd 2009/08/06 Fontinst v1.927 font definitions for TS1/5ch.
 Chapter 4.
 [6
 
-]
+] [7]
 Chapter 5.
-[7
+[8
 
-] [8]
+] [9]
 Chapter 6.
-[9
-
-]
-Chapter 7.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 215.
 [10
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 215.
+Chapter 7.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 237.
+[11
+
+]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 237.
  (./manual.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 215.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 215.
-Package rerunfilecheck Info: File `manual.out' has not changed.
-(rerunfilecheck)             Checksum: F38B318AE73D564B6D7003F097FC6394;1245.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 215.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 237.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 237.
+
+
+Package rerunfilecheck Warning: File `manual.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `manual.out':
+(rerunfilecheck)             Before: 487AF09377A38FDFC1DDD51996A6C670;1652
+(rerunfilecheck)             After:  66C4E080914E9F5D1BB469C5CA903EEA;2039.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 237.
  ) 
 Here is how much of TeX's memory you used:
- 14586 strings out of 495028
- 221803 string characters out of 6181498
+ 14604 strings out of 495028
+ 221999 string characters out of 6181498
  369563 words of memory out of 5000000
- 17440 multiletter control sequences out of 15000+600000
- 117922 words of font info for 73 fonts, out of 8000000 for 9000
+ 17446 multiletter control sequences out of 15000+600000
+ 119330 words of font info for 77 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  59i,13n,100p,990b,1214s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/ly1/texnansi.enc}{/usr/share/t
@@ -1390,13 +1397,15 @@ tmake/charter/5chb8a.pfb></usr/share/texmf/fonts/type1/softmake/charter/5chr8a.
 pfb></usr/share/texmf/fonts/type1/softmake/charter/5chri8a.pfb></usr/share/texm
 f/fonts/type1/softmake/frontpage/5fpm8a.pfb></usr/share/texmf/fonts/type1/softm
 ake/frontpage/5fpr8a.pfb></usr/share/texmf/fonts/type1/softmake/frontpage/5fpr8
-a.pfb></usr/share/texlive/texmf-dist/fonts/type1/bitstrea/charter/bchri8a.pfb><
-/usr/share/texlive/texmf-dist/fonts/type1/public/mathdesign/mdbch/md-chr7t.pfb>
-
-Output written on manual.pdf (11 pages, 113144 bytes).
+a.pfb></usr/share/texlive/texmf-dist/fonts/type1/bitstrea/charter/bchr8a.pfb></
+usr/share/texlive/texmf-dist/fonts/type1/bitstrea/charter/bchri8a.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/public/mathdesign/mdbch/md-chr7t.pfb></usr/sh
+are/texlive/texmf-dist/fonts/type1/public/mathdesign/mdbch/md-chr7y.pfb></usr/s
+hare/texlive/texmf-dist/fonts/type1/adobe/utopia/putri8a.pfb>
+Output written on manual.pdf (12 pages, 135134 bytes).
 PDF statistics:
- 249 PDF objects out of 1000 (max. 8388607)
- 222 compressed objects within 3 object streams
- 72 named destinations out of 1000 (max. 500000)
- 170 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 299 PDF objects out of 1000 (max. 8388607)
+ 268 compressed objects within 3 object streams
+ 80 named destinations out of 1000 (max. 500000)
+ 218 words of extra memory for PDF output out of 10000 (max. 10000000)
 
