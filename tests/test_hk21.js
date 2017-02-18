@@ -2,14 +2,12 @@ var x = 23;
 
 function f(a) {
 	var b = 2;
-	b.a = 4;
-
-	// Doesn't cover this scenario
-	var c = 5;
-	c.a = 4;
+	b.step = 4;
+	
+	//Our Analysis has a limitation that it cannot differntiate between variables and properties
 
 	function g(step) {
-		return x + step + b.a;
+		return x + step;
 	}
 	g(a);
 }

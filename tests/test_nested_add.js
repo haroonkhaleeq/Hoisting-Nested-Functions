@@ -18,11 +18,11 @@ function add(a, b) {
 
 
 // Case 1 :: both brach executes
-//add(3,4);
-//add(3,5);
+add(3,4);
+add(3,5);
 
 // Case 2 :: only addB executes
-//add(3,4);
+add(3,4);
 
 // Case 3 :: only add5 executes
-add(3,5);
+//add(3,5);

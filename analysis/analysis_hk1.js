@@ -87,13 +87,13 @@ var function_ids = [];
         	
         	check_for_anonymous_functions();
 
-        	/*console.log("Function IDS");
+        	console.log("Function IDS");
         	console.log(function_ids);
         	console.log("Function List: ");
             console.log(function_list);
             console.log("Program Stack: ");
-			console.log(program_stack);*/
-			//return;
+			console.log(program_stack);
+			return;
 
 			console.log();
 			console.log("********************************************");
