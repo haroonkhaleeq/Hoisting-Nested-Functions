@@ -6,14 +6,21 @@
 \BOOKMARK [1][-]{section.3.3}{Hoisted functions in JavaScript}{chapter.3}% 6
 \BOOKMARK [1][-]{section.3.4}{Advantage of Hoisted functions over Nested functions}{chapter.3}% 7
 \BOOKMARK [0][-]{chapter.4}{Jalangi}{}% 8
-\BOOKMARK [0][-]{chapter.5}{Approach to the Goals}{}% 9
-\BOOKMARK [1][-]{section.5.1}{Goals}{chapter.5}% 10
-\BOOKMARK [1][-]{section.5.2}{Approach}{chapter.5}% 11
-\BOOKMARK [2][-]{subsection.5.2.1}{Step 1: Identifying the nested functions}{section.5.2}% 12
-\BOOKMARK [2][-]{subsection.5.2.2}{Step 2: Identifying variable's usage scope}{section.5.2}% 13
-\BOOKMARK [2][-]{subsection.5.2.3}{Step 3: Identifying functions with same name}{section.5.2}% 14
-\BOOKMARK [0][-]{chapter.6}{Corner Cases}{}% 15
-\BOOKMARK [1][-]{section.6.1}{Anonymous Functions}{chapter.6}% 16
-\BOOKMARK [1][-]{section.6.2}{Recursive Functions}{chapter.6}% 17
-\BOOKMARK [1][-]{section.6.3}{Property of object}{chapter.6}% 18
-\BOOKMARK [0][-]{chapter.7}{Conclusions}{}% 19
+\BOOKMARK [1][-]{section.4.1}{invokeFunPre\(iid, f, base, args, isConstructor, isMethod, functionIid, functionSid\)}{chapter.4}% 9
+\BOOKMARK [1][-]{section.4.2}{invokeFun\(iid, f, base, args, result, isConstructor, isMethod, functionIid, functionSid\)}{chapter.4}% 10
+\BOOKMARK [1][-]{section.4.3}{declare\(iid, name, val, isArgument, argumentIndex, isCatchParam\)}{chapter.4}% 11
+\BOOKMARK [1][-]{section.4.4}{getField\(iid, base, offset, val, isComputed, isOpAssign, isMethodCall\)}{chapter.4}% 12
+\BOOKMARK [1][-]{section.4.5}{putField\(iid, base, offset, val, isComputed, isOpAssign\)}{chapter.4}% 13
+\BOOKMARK [1][-]{section.4.6}{read\(iid, name, val, isGlobal, isScriptLocal\)}{chapter.4}% 14
+\BOOKMARK [1][-]{section.4.7}{read\(iid, name, val, isGlobal, isScriptLocal\)}{chapter.4}% 15
+\BOOKMARK [0][-]{chapter.5}{Approach to the Goals}{}% 16
+\BOOKMARK [1][-]{section.5.1}{Goals}{chapter.5}% 17
+\BOOKMARK [1][-]{section.5.2}{Approach}{chapter.5}% 18
+\BOOKMARK [2][-]{subsection.5.2.1}{Step 1: Identifying the nested functions}{section.5.2}% 19
+\BOOKMARK [2][-]{subsection.5.2.2}{Step 2: Identifying variable's usage scope}{section.5.2}% 20
+\BOOKMARK [2][-]{subsection.5.2.3}{Step 3: Identifying functions with same name}{section.5.2}% 21
+\BOOKMARK [0][-]{chapter.6}{Corner Cases}{}% 22
+\BOOKMARK [1][-]{section.6.1}{Anonymous Functions}{chapter.6}% 23
+\BOOKMARK [1][-]{section.6.2}{Recursive Functions}{chapter.6}% 24
+\BOOKMARK [1][-]{section.6.3}{Property of object}{chapter.6}% 25
+\BOOKMARK [0][-]{chapter.7}{Conclusions}{}% 26

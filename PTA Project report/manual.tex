@@ -161,7 +161,29 @@ f(2);
 It is observed that the nested version of the function in the example is \textbf{42\%} slower than Google's V8 JavaScript engine than the equivalent hoisted version where $g()$ is defined outside of $f()$. It should be mentioned that function's name doesn't get hoisted if it is part of a function expression.
 
 \chapter{Jalangi}
-Description of Jalangi, the used framework for dynamic analysis.
+The implementation of the analysis for detecting hoistable functions in JavaScript programs is based on Jalangi2. Jalangi is a proven dynamic analysis framework for JavaScript. Jalangi generates an instrumented intermediate code from JavaScript
+which it used for its analyses. It assigns a unique id $sid$ to each JavaScript loaded in runtime. Each $sid$ is mapped to an object called $iids$. $iids$ is an array which represents each instruction in the code using a $iid$ which stands for instruction id. The $iid$ is a unique value which is assigned to each callback function inserted by Jalangi. $iids$ also maps each $iid$ to an array containing $[beginLineNumber, beginColumnNumber, endLineNumber, endColumnNumber]$. The mapping from $iids$ to arrays is only available if the code is instrumented with the $--inlineIID$ option.
+
+\newblock Jalangi has several types of callback functions as mentioned above. Each instruction in a program can be mapped to a callback. While executing the target program using Jalangi the analysis executes the callbacks for each of the instructions. To test a particular behavior of the program the callbacks can be used in the analysis and can be implemented as needed. Jalangi analyses can be executed online using browser or using command line or stored in some log file from command prompt or some runtime script. The provided analysis runs in a command line where the written analysis program and the program on which the analysis is to be performed has to be specified with few other optional parameters to the Jalangi2 executor program.
+
+\newblock Now we will discuss in brief the callbacks which are used in the analysis file. Each function with other parameters provides a $-lstinline-iid-$ parameter which can be used to uniquely distinguish the instruction for which the callback is called. The analysis logic uses the following callbacks:
+\section{invokeFunPre(iid, f, base, args, isConstructor, isMethod, functionIid, functionSid)} 
+$invokeFunPre()$ call back in called before a function or method or constructor is invoked. Parameter $f$ provides the function object whose body is going to be invoked. The $name$ attribute of the function object can be used to retrieve the function name. This feature is used in the analysis file which will be discussed later. Using the $iid$ parameter the line number of the source code where the function is declared can be obtained.
+\section{invokeFun(iid, f, base, args, result, isConstructor, isMethod, functionIid, functionSid)}
+Similar to $invokeFunPre()$, this callback is executed after the function or method or constructor invocation.
+\section{declare(iid, name, val, isArgument, argumentIndex, isCatchParam)}
+This callback is called for every local variable declared in the scope, for every formal parameter, for every function defined using a function statement, for arguments variables, and for the formal parameter passed in a catch statement. $name$ provides the name of the variable declared and $val$ provides the initial value of the variable at declaration time. $isArgument$ parameter is $true$ if the variable is a arguments
+or a formal parameter. $isCatchParam$ parameter is $true$ if the variable is a parameter of a catch statement.
+\section{getField(iid, base, offset, val, isComputed, isOpAssign, isMethodCall)}
+This callback is called after property of an object is accessed in the function scope. $offset$ provides the name of property. $isComputed$ property is $true$ if the property is accessed using squire brackets. For example, $isComputed$ is $true$ is the operation is $a[b]$ but is false is the operations is $a.b$.
+\section{putField(iid, base, offset, val, isComputed, isOpAssign)}
+$putField()$ callback is called after a property of an object is written. Just like $getField()$, it also have $offset$ which provides the name of property, and $isComputed$ does the same thing.
+\section{read(iid, name, val, isGlobal, isScriptLocal)}
+Read call back is called after a variable is read. $name$ parameter provides the name of the variable being read. $val$ parameter provides the value of the variable. $isGlobal$ is $true$ if the variable is not declared using var keyword in the current script. $isScriptLocal$ parameter becomes $true$ if the variable is declared in the global
+scope using var.
+\section{read(iid, name, val, isGlobal, isScriptLocal)}
+Write callback is called before a variable is written. the meaning of the parameters are same as read callback.
+
 
 \chapter{Approach to the Goals}
 \section{Goals}
