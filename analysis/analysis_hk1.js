@@ -1,6 +1,11 @@
 
+// function_list is responsible for storing all the function names in the program
 var function_list = [];
+
+// program_stack is responsible for storing all the call-back records executed by the jalangi
 var program_stack = [];
+
+// function_ids is responsible for storing all the function ids in the test program (It is being used for detecting the recursive function)
 var function_ids = [];
 
 (function (sandbox) {
@@ -8,8 +13,10 @@ var function_ids = [];
 
         this.invokeFunPre = function (iid, f, base, args, isConstructor, isMethod, functionIid, functionSid) {
             
+            //pushing the call-back with the function name to the program stack
             program_stack.push('invoke-fun-pre_' + f.name);
             
+            //
             if(f.name.length > 0){            	
             	if(function_ids.indexOf(functionIid) == -1){
             		function_list.push(f.name);
@@ -86,14 +93,14 @@ var function_ids = [];
         this.scriptExit = function (iid, wrappedExceptionVal) {
         	
         	check_for_anonymous_functions();
-
-        	console.log("Function IDS");
+        	
+        	/*console.log("Function IDS");
         	console.log(function_ids);
         	console.log("Function List: ");
             console.log(function_list);
             console.log("Program Stack: ");
-			console.log(program_stack);
-			return;
+			console.log(program_stack);*/
+			//return;
 
 			console.log();
 			console.log("********************************************");
@@ -111,7 +118,7 @@ var function_ids = [];
 			var final_result = result1.filter(function(n) {
 			  return result2.indexOf(n) > -1;
 			});
-
+			
 			console.log("Analysis suggests that the following functions should be hoisted!");
 			console.log(final_result);
 
@@ -139,8 +146,12 @@ function check_for_anonymous_functions(){
 	for (var i = 0; i < program_stack.length; i++) {
 		if(program_stack[i] == 'invoke-fun-pre_'){
 			
-			if(i == 0)
+			if(i == 0){
+				func_stack.push("anonymous");
+				program_stack[i] = program_stack[i] + "anonymous";
+				function_list.push("anonymous");
 				continue;
+			}
 
 			func_name = program_stack[i-1].split('_').splice(-1)[0];
 			program_stack[i] = program_stack[i] + func_name;
@@ -308,13 +319,15 @@ function get_nf_of_global_fun_f(f){
 
 	while(true){
 
+		if(program_stack.length == i)
+			break;
+
 		if(program_stack[i].includes('invoke-fun-pre_'+f)){
 			match = true;
 		}
 
 		if(match == true){
 			if(program_stack[i].includes('declare_') && (function_list.indexOf(program_stack[i].split('_').splice(-1)[0]) > -1) ){
-				//console.log(program_stack[i].split('_').splice(-1)[0]);
 				result.push(program_stack[i].split('_').splice(-1)[0]);
 				nested_flag = true;
 			}
@@ -347,9 +360,9 @@ function get_nf_not_globally_declared(){
 	var result = [];
 
 	while(true){
-
-		if(program_stack.length == 0)
+		if(program_stack.length == i){
 			break;
+		}
 
 		if(!program_stack[i].includes('declare_')){
 			break;
@@ -357,6 +370,14 @@ function get_nf_not_globally_declared(){
 
 		if(function_list.indexOf(program_stack[i].split('_').splice(-1)[0]) > -1){
 			global_fun.push(program_stack[i].split('_').splice(-1)[0]);
+			i++;
+			continue;
+		}
+
+		if(program_stack[i].split('_').splice(-1)[0] == ""){
+			i++;
+			global_fun.push("anonymous");
+			continue;
 		}
 
 		i++;
@@ -438,23 +459,18 @@ function check_program_trace_for_dependencies(){
 			var nf = get_nested_functions(f, i);
 			
 			var write_list = get_write_list(f);
-			//console.log(f + " writes to: " + write_list);
-
+			
 			var dependent_flag = false;
 			for (var k = 0; k < nf.length; k++) {
 
 				dependent_flag = false;
 				var read_list = get_read_list(nf[k]);
-				//console.log(nf[k] + " reads from: " + read_list);
-
+				
 				for (var l = 0; l < read_list.length; l++) {
-					//console.log(read_list[l]);
 					if(write_list.indexOf(read_list[l]) > -1){
 						dependent_flag = true;
 					}
 				};
-
-				//console.log(dependent_flag);
 
 				if(dependent_flag === false){
 					result.push(nf[k]);
