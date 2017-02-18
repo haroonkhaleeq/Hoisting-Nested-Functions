@@ -1,3 +1,8 @@
+
+/* 
+* Test case for the independent nested functions.
+*/
+
 var x = 23;
 x.a = 43;
 

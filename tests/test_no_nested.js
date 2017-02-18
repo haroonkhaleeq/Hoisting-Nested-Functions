@@ -1,3 +1,9 @@
+
+/* 
+* Test case without nested functions.
+*/
+
+
 var x = 23;
 
 function g(step) {

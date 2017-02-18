@@ -1,4 +1,9 @@
 
+/* 
+* Test case for the anonymous functions.
+* Our Analysis says that function c should be hoisted.
+*/
+
 var x = function (a, b) {
 
 	var c = function(){

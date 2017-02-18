@@ -1,3 +1,9 @@
+
+/**
+* Example test case: Parent variable used before nested child function
+Output Our analysis suggests that g cannot be hoisted although it can be.
+*/
+
 var x = 23;
 
 function f(a) {

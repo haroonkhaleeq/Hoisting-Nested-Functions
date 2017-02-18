@@ -1,4 +1,8 @@
 
+/* 
+* Test case for the factorial function.
+*/
+
 var factor = function(number) {
   var result = 1;
   var count;

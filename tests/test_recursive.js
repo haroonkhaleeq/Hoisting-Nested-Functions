@@ -1,5 +1,8 @@
-//recursive
 
+/* 
+* Test case for the recursive functions.
+* Our Analysis says that function "abc" should be hoisted.
+*/
 
 function factorial(n) {
 

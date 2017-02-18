@@ -1,3 +1,8 @@
+/**
+* Example test case: Parent variable used before nested child function
+Output: Analysis suggests that function g, s and p can be hoisted
+*/
+
 var x = 23;
 
 function f(a) {
@@ -7,16 +12,8 @@ function f(a) {
 	g(a);
 }
 
-function g(){}
-g();
-
 function t(a) {
-	var c = 3;
-
 	function s(viu) {
-		var z = 5;
-		var str = 'abc';
-
 		function r(ert) {
 			return x + ert;
 		}

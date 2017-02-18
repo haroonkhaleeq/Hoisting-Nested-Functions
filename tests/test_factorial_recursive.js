@@ -1,3 +1,9 @@
+
+
+/* 
+* Test case for the recursive functions.
+*/
+
 var factorial = function(number) {
   if (number <= 0) { // terminal case
     return 1;

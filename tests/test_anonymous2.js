@@ -1,4 +1,10 @@
 
+
+/* 
+* Test case for the anonymous functions.
+* Our Analysis says that function c cannot be hoisted.
+*/
+
 var x = function (a, b) {
 
 	var r = 3;
