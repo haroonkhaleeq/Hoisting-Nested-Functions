@@ -19,8 +19,9 @@
 \BOOKMARK [2][-]{subsection.5.2.1}{Step 1: Identifying the nested functions}{section.5.2}% 19
 \BOOKMARK [2][-]{subsection.5.2.2}{Step 2: Identifying variable's usage scope}{section.5.2}% 20
 \BOOKMARK [2][-]{subsection.5.2.3}{Step 3: Identifying functions with same name}{section.5.2}% 21
-\BOOKMARK [0][-]{chapter.6}{Corner Cases}{}% 22
-\BOOKMARK [1][-]{section.6.1}{Anonymous Functions}{chapter.6}% 23
-\BOOKMARK [1][-]{section.6.2}{Recursive Functions}{chapter.6}% 24
-\BOOKMARK [1][-]{section.6.3}{Property of object}{chapter.6}% 25
-\BOOKMARK [0][-]{chapter.7}{Conclusions}{}% 26
+\BOOKMARK [2][-]{subsection.5.2.4}{Special Step: Anonymous Function Handling}{section.5.2}% 22
+\BOOKMARK [0][-]{chapter.6}{Corner Cases}{}% 23
+\BOOKMARK [1][-]{section.6.1}{Anonymous Functions}{chapter.6}% 24
+\BOOKMARK [1][-]{section.6.2}{Recursive Functions}{chapter.6}% 25
+\BOOKMARK [1][-]{section.6.3}{Property of object}{chapter.6}% 26
+\BOOKMARK [0][-]{chapter.7}{Conclusions}{}% 27

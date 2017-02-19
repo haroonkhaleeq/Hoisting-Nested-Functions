@@ -19,6 +19,7 @@
 \contentsline {subsection}{\numberline {5.2.1}Step 1: Identifying the nested functions}{8}{subsection.5.2.1}
 \contentsline {subsection}{\numberline {5.2.2}Step 2: Identifying variable's usage scope}{8}{subsection.5.2.2}
 \contentsline {subsection}{\numberline {5.2.3}Step 3: Identifying functions with same name}{9}{subsection.5.2.3}
+\contentsline {subsection}{\numberline {5.2.4}Special Step: Anonymous Function Handling}{9}{subsection.5.2.4}
 \contentsline {chapter}{\numberline {6}Corner Cases}{10}{chapter.6}
 \contentsline {section}{\numberline {6.1}Anonymous Functions}{10}{section.6.1}
 \contentsline {section}{\numberline {6.2}Recursive Functions}{10}{section.6.2}

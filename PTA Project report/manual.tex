@@ -212,8 +212,8 @@ These following Jalangi callbacks are used for this purpose: \emph{getField()}, 
 \subsection{Step 3: Identifying functions with same name}
 Jalangi analysis tries to identify if there is already a function having same name as nested function in any scope, starting from the global scope. This function \emph{get\_nf\_not\_globally\_declared()} returns a list of all nested functions which does not exist globally with the same function name (i.e. no duplicate function names).
 
-<   To be added: Anonymous function handling   >
-
+\subsection{Special Step: Anonymous Function Handling}
+It is observed that while handling Anonymous functions, $invokeFunPre()$ does not return any $f.name$. This normally creates problem in identifying function name from the used $program stack$. It is also observed that the variables to which anonymous functions are assigned, those corresponding names can be used as the anonymous function name in the $program stack$. So the analysis takes the last accessed variable into consideration before the anonymous function invocation and stores the name as a function name in the program stack. When the end of anonymous function block is encountered, analysis does the same by putting the variable name to mark the ending block of the anonymous function in program stack. The function $check_for_anonymous_functions()$ takes care of all these mentioned steps.
 
 \chapter{Corner Cases}
 During the dynamic analysis of hoisted functions with Jalangi we happen to come across some cases which can not be detected properly using Jalangi 2 framework. Some of the corner cases are described here.
