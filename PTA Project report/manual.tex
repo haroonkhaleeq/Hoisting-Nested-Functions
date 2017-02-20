@@ -181,8 +181,8 @@ $putField()$ callback is called after a property of an object is written. Just l
 \section{read(iid, name, val, isGlobal, isScriptLocal)}
 Read call back is called after a variable is read. $name$ parameter provides the name of the variable being read. $val$ parameter provides the value of the variable. $isGlobal$ is $true$ if the variable is not declared using var keyword in the current script. $isScriptLocal$ parameter becomes $true$ if the variable is declared in the global
 scope using var.
-\section{read(iid, name, val, isGlobal, isScriptLocal)}
-Write callback is called before a variable is written. the meaning of the parameters are same as read callback.
+\section{write(iid, name, val, lhs, isGlobal, isScriptLocal)}
+Write callback is called before a variable is written. the meaning of the parameters are same as read callback. Similar to \emph{read()} $val$ parameter provides the value of the variable. $isGlobal$ is $true$ if the variable is not declared using var keyword in the current script. $isScriptLocal$ parameter becomes $true$ if the variable is declared in the global scope using var.
 
 
 \chapter{Approach to the Goals}
@@ -213,21 +213,83 @@ These following Jalangi callbacks are used for this purpose: \emph{getField()}, 
 Jalangi analysis tries to identify if there is already a function having same name as nested function in any scope, starting from the global scope. This function \emph{get\_nf\_not\_globally\_declared()} returns a list of all nested functions which does not exist globally with the same function name (i.e. no duplicate function names).
 
 \subsection{Special Step: Anonymous Function Handling}
-It is observed that while handling Anonymous functions, $invokeFunPre()$ does not return any $f.name$. This normally creates problem in identifying function name from the used $program stack$. It is also observed that the variables to which anonymous functions are assigned, those corresponding names can be used as the anonymous function name in the $program stack$. So the analysis takes the last accessed variable into consideration before the anonymous function invocation and stores the name as a function name in the program stack. When the end of anonymous function block is encountered, analysis does the same by putting the variable name to mark the ending block of the anonymous function in program stack. The function $check_for_anonymous_functions()$ takes care of all these mentioned steps.
+It is observed that while handling Anonymous functions, $invokeFunPre()$ does not return any $f.name$. This normally creates problem in identifying function name from the used $program stack$. It is also observed that the variables to which anonymous functions are assigned, those corresponding names can be used as the anonymous function name in the $program stack$. So the analysis takes the last accessed variable into consideration before the anonymous function invocation and stores the name as a function name in the program stack. When the end of anonymous function block is encountered, analysis does the same by putting the variable name to mark the ending block of the anonymous function in program stack. The function $check\_for\_anonymous\_functions()$ takes care of all these mentioned steps.
+\chapter{Evaluation}
+We tested our analysis with node version v0.10.37 on an Ubuntu 16.04LTS Operating System. The analysis did run on an Intel Core i7 i7-4700HQ 2.4 GHz (8 cores) with 16GB RAM and took under 30 seconds to compute on every test. 
+\newline All different scenarios are split into different test cases and they can be found in \emph{/test} folder in provided source code. All of them behaved like expected and covered all different possibilities what could make a nested function hoistable or
+not. In addition we tested our analysis on two of the most dependent upon packages of \emph{npm}, \emph{underscore} and \emph{lodash}.
+\newline We modified their respective test suites based on the \emph{QUnit} testing framework to execute the Jalangi instrumented version of the libraries. With this we were able to analyze the libraries without taking the execution of the testing suites itself into account. For each function the analysis file encounters it checks, whether the function is hoistable, not hoistable. If the nested function is hoistable, the analysis outputs the function name in the list of hoistable functions after the execution of the analysis. If the function is only declared but not executed we can not decide due to our dynamic approach.
+
+
+For those two libraries we were able to identify hoistable and not hoistable functions. The following table \emph{Table 6.1} shows the results. In \emph{underscore} The analysis found - out of the 24 functions declared 1 hoistable function, for the other functions we were not able to decide whether they are hoistable or not. \emph{Lodash} hat a total number of
+813 functions, for which are 156 hoistable. 19 are not hoistable due to used variables and the other 638 the analysis could not decide whether they are hoistable or not.
+
+The high number of not decidable respectively not executed are functions, that have no source code in the actual library, like native functions, and therefore can not be analyzed during execution, so they get considered \emph{not executed}.
+\begin{table}[]
+	\centering
+	%\caption{Evaluation Result on NPM packages}
+	\label{my-label}
+	\begin{tabular}{lllll}
+	\hline
+		Package    & Total no. of functions & No. of not executed & No. of Hoistable & Not Hoistable \\ \hline
+		underscore & 24                     & 23                  & 1                & 0                   \\ \hline
+		loadash    & 813                    & 638                 & 156              & 19 \\ \hline                 
+	\end{tabular}
+	\caption{Evaluation Result on popular NPM packages}
+\end{table}
 
 \chapter{Corner Cases}
-During the dynamic analysis of hoisted functions with Jalangi we happen to come across some cases which can not be detected properly using Jalangi 2 framework. Some of the corner cases are described here.
+During the dynamic analysis of hoisted functions with Jalangi we happen to come across some interesting cases which can or can not be detected properly using Jalangi2 framework. Some of the corner cases are described here.
 \section{Anonymous Functions}
-..
-\section{Recursive Functions}
-..
-\section{Property of object}
-If there are different properties of different object, Jalangi 2 can not properly detect the base object of a particular property. For example, in a program if we have
+One of the interesting scenarios would be Anonymous function in JavaScript. Anonymous function is a function that is declared  without any named identifier to refer to it. An anonymous function is not usually accessible after its initial creation. It is normally used as an argumet to other function. Example, (refer to \emph{/tests/test\_anonymous.js)}
 \begin{lstlisting}[language=JavaScript]
-var b.a = 23;
-var c.a = 44;
+var x = function (a, b) {
+ var c = function(){
+  return 4;
+ }
+ c();
+ return a * b;
+};
+var z = x(4, 3);
 \end{lstlisting}
-Differentiating between those 2 a's is not possible with Jalangi predefined callback functions.
+Analysis of the file suggests that function $c$ should be hoisted.
+
+\section{Recursive Functions}
+Recursive function is a function which can either call itself or is in a potential cycle of function calls. In JavaScript, if a function calls itself recursively then the JavaScript engine has to create a new \emph{stack} - a chunk of memory allocated to help keep track of all the information related to the function at the point of execution. It should be noted that creating stacks is expensive, as the JavaScript engine can only create as many stacks as it has memory available. Example, (refer to \emph{/tests/test\_recursive.js)}
+\begin{lstlisting}[language=JavaScript]
+function factorial(n) {	
+ function abc(){
+  return 5;
+ }
+ abc();
+ if(n == 0) {
+  return 1
+ } else {
+  return n * factorial(n - 1);
+ }
+}
+factorial(3);
+\end{lstlisting}
+Analysis of the file suggests that function $abc$ should be hoisted.
+
+\section{Property of object}
+JavaScript is designed on a simple object-based paradigm. An \emph{object} is a collection of \emph{properties}. A \emph{property} is an association between a name or key and a value. This value can be a function, in which case the property is known as a \emph{method}.
+
+
+The analysis file have a limitation while analyzing property of object. It can not differentiate between variables and properties. For example, if we run \emph{/tests/test\_properties.js}, the analysis will suggests that function $g$ can not be hoisted, even though it can be. Reason is, it considers and treats the property $step$ as a variable.
+\begin{lstlisting}[language=JavaScript]
+var x = 23;
+function f(a) {
+ var b = 2;
+ b.step = 4;
+ function g(step) {
+  return x + step;
+ }
+ g(a);
+}
+f(1);
+\end{lstlisting}
+
 
 \chapter{Conclusions}
 We have developed a dynamic analysis which was tested on three node.js libraries. The hoistable functions detected in all cases where checked manually in the source code and no false positives were found. The analysis also provides additional information on the functions which can not be hoisted or not hoistable. 

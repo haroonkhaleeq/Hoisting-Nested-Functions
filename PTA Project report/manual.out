@@ -12,7 +12,7 @@
 \BOOKMARK [1][-]{section.4.4}{getField\(iid, base, offset, val, isComputed, isOpAssign, isMethodCall\)}{chapter.4}% 12
 \BOOKMARK [1][-]{section.4.5}{putField\(iid, base, offset, val, isComputed, isOpAssign\)}{chapter.4}% 13
 \BOOKMARK [1][-]{section.4.6}{read\(iid, name, val, isGlobal, isScriptLocal\)}{chapter.4}% 14
-\BOOKMARK [1][-]{section.4.7}{read\(iid, name, val, isGlobal, isScriptLocal\)}{chapter.4}% 15
+\BOOKMARK [1][-]{section.4.7}{write\(iid, name, val, lhs, isGlobal, isScriptLocal\)}{chapter.4}% 15
 \BOOKMARK [0][-]{chapter.5}{Approach to the Goals}{}% 16
 \BOOKMARK [1][-]{section.5.1}{Goals}{chapter.5}% 17
 \BOOKMARK [1][-]{section.5.2}{Approach}{chapter.5}% 18
@@ -20,8 +20,9 @@
 \BOOKMARK [2][-]{subsection.5.2.2}{Step 2: Identifying variable's usage scope}{section.5.2}% 20
 \BOOKMARK [2][-]{subsection.5.2.3}{Step 3: Identifying functions with same name}{section.5.2}% 21
 \BOOKMARK [2][-]{subsection.5.2.4}{Special Step: Anonymous Function Handling}{section.5.2}% 22
-\BOOKMARK [0][-]{chapter.6}{Corner Cases}{}% 23
-\BOOKMARK [1][-]{section.6.1}{Anonymous Functions}{chapter.6}% 24
-\BOOKMARK [1][-]{section.6.2}{Recursive Functions}{chapter.6}% 25
-\BOOKMARK [1][-]{section.6.3}{Property of object}{chapter.6}% 26
-\BOOKMARK [0][-]{chapter.7}{Conclusions}{}% 27
+\BOOKMARK [0][-]{chapter.6}{Evaluation}{}% 23
+\BOOKMARK [0][-]{chapter.7}{Corner Cases}{}% 24
+\BOOKMARK [1][-]{section.7.1}{Anonymous Functions}{chapter.7}% 25
+\BOOKMARK [1][-]{section.7.2}{Recursive Functions}{chapter.7}% 26
+\BOOKMARK [1][-]{section.7.3}{Property of object}{chapter.7}% 27
+\BOOKMARK [0][-]{chapter.8}{Conclusions}{}% 28

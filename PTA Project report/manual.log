@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.5.4)  19 FEB 2017 09:30
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.5.4)  20 FEB 2017 05:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1283,7 +1283,7 @@ Package parcolumns Info: Width of column 1 set to 72.1248pt on input line 84.
 Package parcolumns Info: Width of column 2 calculated as 385.72682pt on input l
 ine 84.
 
-<tud_logo.pdf, id=112, 157.58875pt x 63.23625pt>
+<tud_logo.pdf, id=116, 157.58875pt x 63.23625pt>
 File: tud_logo.pdf Graphic file (type pdf)
  <use tud_logo.pdf>
 Package pdftex.def Info: tud_logo.pdf used on input line 84.
@@ -1360,30 +1360,86 @@ Chapter 5.
 
 ] [9]
 Chapter 6.
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `tbp') on input line 228.
+
 [10
 
 ]
 Chapter 7.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 237.
+LaTeX Font Info:    Font shape `OT1/mdbch/m/n' will be
+(Font)              scaled to size 11.04007pt on input line 268.
+LaTeX Font Info:    Font shape `OT1/mdbch/m/n' will be
+(Font)              scaled to size 7.68005pt on input line 268.
+LaTeX Font Info:    Font shape `OT1/mdbch/m/n' will be
+(Font)              scaled to size 6.62404pt on input line 268.
+LaTeX Font Info:    Font shape `OML/mdbch/m/it' will be
+(Font)              scaled to size 11.04007pt on input line 268.
+LaTeX Font Info:    Font shape `OML/mdbch/m/it' will be
+(Font)              scaled to size 7.68005pt on input line 268.
+LaTeX Font Info:    Font shape `OML/mdbch/m/it' will be
+(Font)              scaled to size 6.62404pt on input line 268.
+LaTeX Font Info:    Font shape `OMS/mdbch/m/n' will be
+(Font)              scaled to size 11.04007pt on input line 268.
+LaTeX Font Info:    Font shape `OMS/mdbch/m/n' will be
+(Font)              scaled to size 7.68005pt on input line 268.
+LaTeX Font Info:    Font shape `OMS/mdbch/m/n' will be
+(Font)              scaled to size 6.62404pt on input line 268.
+LaTeX Font Info:    Font shape `OMX/mdbch/m/n' will be
+(Font)              scaled to size 11.04007pt on input line 268.
+LaTeX Font Info:    Font shape `OMX/mdbch/m/n' will be
+(Font)              scaled to size 7.68005pt on input line 268.
+LaTeX Font Info:    Font shape `OMX/mdbch/m/n' will be
+(Font)              scaled to size 6.62404pt on input line 268.
+LaTeX Font Info:    Font shape `OML/mdbch/m/n' will be
+(Font)              scaled to size 11.04007pt on input line 268.
+LaTeX Font Info:    Font shape `OML/mdbch/m/n' will be
+(Font)              scaled to size 7.68005pt on input line 268.
+LaTeX Font Info:    Font shape `OML/mdbch/m/n' will be
+(Font)              scaled to size 6.62404pt on input line 268.
+LaTeX Font Info:    Font shape `MDA/mdbch/m/n' will be
+(Font)              scaled to size 11.04007pt on input line 268.
+LaTeX Font Info:    Font shape `MDA/mdbch/m/n' will be
+(Font)              scaled to size 7.68005pt on input line 268.
+LaTeX Font Info:    Font shape `MDA/mdbch/m/n' will be
+(Font)              scaled to size 6.62404pt on input line 268.
+LaTeX Font Info:    Font shape `MDB/mdbch/m/n' will be
+(Font)              scaled to size 11.04007pt on input line 268.
+LaTeX Font Info:    Font shape `MDB/mdbch/m/n' will be
+(Font)              scaled to size 7.68005pt on input line 268.
+LaTeX Font Info:    Font shape `MDB/mdbch/m/n' will be
+(Font)              scaled to size 6.62404pt on input line 268.
+LaTeX Font Info:    Font shape `OML/mdput/m/it' will be
+(Font)              scaled to size 10.81003pt on input line 268.
+LaTeX Font Info:    Font shape `OML/mdput/m/it' will be
+(Font)              scaled to size 7.52002pt on input line 268.
+LaTeX Font Info:    Font shape `OML/mdput/m/it' will be
+(Font)              scaled to size 6.48601pt on input line 268.
 [11
 
+] [12]
+Chapter 8.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 299.
+[13
+
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 237.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 299.
  (./manual.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 237.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 237.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 299.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 299.
 Package rerunfilecheck Info: File `manual.out' has not changed.
-(rerunfilecheck)             Checksum: BA93517A33796F5E18E5069C60179644;2134.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 237.
+(rerunfilecheck)             Checksum: ADB9DB540B817A9A95E9049CB4AF10CE;2186.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 299.
  ) 
 Here is how much of TeX's memory you used:
- 14610 strings out of 495028
- 222072 string characters out of 6181498
- 369563 words of memory out of 5000000
- 17448 multiletter control sequences out of 15000+600000
- 120418 words of font info for 80 fonts, out of 8000000 for 9000
+ 14682 strings out of 495028
+ 223141 string characters out of 6181498
+ 378633 words of memory out of 5000000
+ 17485 multiletter control sequences out of 15000+600000
+ 147659 words of font info for 108 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 59i,12n,100p,990b,1214s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 59i,13n,100p,990b,1214s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/ly1/texnansi.enc}{/usr/share/t
 exlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf/fonts/type1/sof
 tmake/charter/5chb8a.pfb></usr/share/texmf/fonts/type1/softmake/charter/5chr8a.
@@ -1395,10 +1451,10 @@ usr/share/texlive/texmf-dist/fonts/type1/bitstrea/charter/bchri8a.pfb></usr/sha
 re/texlive/texmf-dist/fonts/type1/public/mathdesign/mdbch/md-chr7t.pfb></usr/sh
 are/texlive/texmf-dist/fonts/type1/public/mathdesign/mdbch/md-chr7y.pfb></usr/s
 hare/texlive/texmf-dist/fonts/type1/adobe/utopia/putri8a.pfb>
-Output written on manual.pdf (12 pages, 136392 bytes).
+Output written on manual.pdf (14 pages, 144938 bytes).
 PDF statistics:
- 309 PDF objects out of 1000 (max. 8388607)
- 278 compressed objects within 3 object streams
- 81 named destinations out of 1000 (max. 500000)
- 234 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 362 PDF objects out of 1000 (max. 8388607)
+ 328 compressed objects within 4 object streams
+ 115 named destinations out of 1000 (max. 500000)
+ 242 words of extra memory for PDF output out of 10000 (max. 10000000)
 
